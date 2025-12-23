@@ -66,27 +66,37 @@ const generateSchema = z.object({
 export const promptRouter = new Hono();
 
 /**
- * Build content text from request body
+ * Build content text from request body.
+ * Combines content from ALL tabs that have data, not just the selected tab.
  */
 function extractContentText(body: z.infer<typeof generateSchema>): string {
-  switch (body.content.type) {
-    case 'text':
-      return body.content.text || '';
-    case 'topic':
-      return `Topic: ${body.content.topic || 'General presentation'}`;
-    case 'file':
-      return body.content.fileContent
-        ? `Content from file "${body.content.fileName || 'uploaded file'}":\n${body.content.fileContent}`
-        : '';
-    case 'url':
-      return body.content.urlContent
-        ? `Content from URL "${body.content.url}":\n${body.content.urlContent}`
-        : body.content.url
-          ? `Create a presentation about the content from: ${body.content.url}`
-          : '';
-    default:
-      return '';
+  const contentParts: string[] = [];
+
+  // Add text content if present
+  if (body.content.text?.trim()) {
+    contentParts.push(`## User Prompt/Text\n${body.content.text.trim()}`);
   }
+
+  // Add topic if present
+  if (body.content.topic?.trim()) {
+    contentParts.push(`## Topic Focus\n${body.content.topic.trim()}`);
+  }
+
+  // Add file content if present
+  if (body.content.fileContent?.trim()) {
+    const fileName = body.content.fileName || 'uploaded file';
+    contentParts.push(`## Content from File "${fileName}"\n${body.content.fileContent.trim()}`);
+  }
+
+  // Add URL content if present
+  if (body.content.urlContent?.trim()) {
+    contentParts.push(`## Content from URL "${body.content.url}"\n${body.content.urlContent.trim()}`);
+  } else if (body.content.url?.trim()) {
+    // URL provided but not yet extracted
+    contentParts.push(`## Reference URL\nCreate a presentation about the content from: ${body.content.url}`);
+  }
+
+  return contentParts.join('\n\n');
 }
 
 // Original non-streaming endpoint (kept for backwards compatibility)

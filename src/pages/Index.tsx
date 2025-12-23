@@ -67,11 +67,12 @@ export default function Index() {
     // We'll show this via the UI instead of a toast to avoid spam
   }
 
+  // Check if ANY tab has content (all sources will be combined)
   const hasContent =
-    (content.type === 'text' && content.text.trim()) ||
-    (content.type === 'topic' && content.topic) ||
-    (content.type === 'file' && content.fileContent) ||
-    (content.type === 'url' && content.url.trim());
+    content.text.trim() ||
+    content.topic ||
+    content.fileContent ||
+    content.url.trim();
 
   return (
     <div className="min-h-screen bg-background">
@@ -121,6 +122,7 @@ export default function Index() {
                   1
                 </span>
                 <h2 className="text-xl font-semibold text-foreground">Add Your Content</h2>
+                <span className="text-xs text-muted-foreground">(all sources combined)</span>
               </div>
               <ContentInput value={content} onChange={setContent} />
             </section>

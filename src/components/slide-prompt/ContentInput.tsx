@@ -117,7 +117,7 @@ export function ContentInput({ value, onChange }: ContentInputProps) {
           <TabsList className="grid w-full grid-cols-4 bg-muted/50">
             <TabsTrigger value="text" className="flex items-center gap-2">
               <MessageSquare className="h-4 w-4" />
-              <span className="hidden sm:inline">Text</span>
+              <span className="hidden sm:inline">Prompt</span>
             </TabsTrigger>
             <TabsTrigger value="topic" className="flex items-center gap-2">
               <Tag className="h-4 w-4" />
@@ -136,10 +136,10 @@ export function ContentInput({ value, onChange }: ContentInputProps) {
           <TabsContent value="text" className="mt-4">
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">
-                Enter your content
+                Enter your prompt
               </label>
               <Textarea
-                placeholder="Paste or type your presentation content here. This could be notes, an outline, key points, or any text you want to transform into slides..."
+                placeholder="Describe what you want in your slides. You can also add content from Topic, File, or URL tabs - all sources will be combined!"
                 value={value.text}
                 onChange={(e) => handleTextChange(e.target.value)}
                 className="min-h-[200px] resize-none"
