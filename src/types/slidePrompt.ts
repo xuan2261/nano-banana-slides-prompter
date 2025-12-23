@@ -1,6 +1,6 @@
 export type ContentInputType = 'text' | 'topic' | 'file' | 'url';
 
-export type SlideStyle = 
+export type SlideStyle =
   | 'professional'
   | 'technical'
   | 'creative'
@@ -16,13 +16,16 @@ export type SlideStyle =
   | 'watercolor'
   | 'newspaper'
   | 'flat-design'
-  | 'gradient-mesh';
+  | 'gradient-mesh'
+  | 'sci-fi-hud'
+  | 'deep-ocean'
+  | 'dev-console';
 
 export type AspectRatio = '16:9' | '4:3' | '1:1' | '9:16';
 
 export type LayoutStructure = 'visual-heavy' | 'text-heavy' | 'balanced';
 
-export type ColorPalette = 
+export type ColorPalette =
   | 'auto'
   | 'corporate-blue'
   | 'modern-purple'

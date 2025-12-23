@@ -101,6 +101,38 @@ The `docker-compose.yml` orchestrates:
 - **Frontend**: Served via Nginx on port 8080.
 - **Backend**: Hono server running on internal port 3001.
 
+### Deploy from Images (Production)
+
+To deploy using the pre-built images from GitHub Container Registry (GHCR), create a `docker-compose.yml` file on your server:
+
+```yaml
+services:
+  frontend:
+    image: ghcr.io/nomie7/nano-banana-slides-prompter-frontend:latest
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always
+
+  backend:
+    image: ghcr.io/nomie7/nano-banana-slides-prompter-backend:latest
+    environment:
+      - PORT=3001
+      - OPENAI_API_BASE=${OPENAI_API_BASE:-https://api.openai.com/v1}
+      - OPENAI_API_KEY=your-api-key-here
+      - OPENAI_MODEL=gpt-4o
+      - OPENAI_MAX_TOKENS=16384
+      - OPENAI_TEMPERATURE=0.7
+    restart: always
+```
+
+Then run:
+
+```sh
+docker-compose up -d
+```
+
 
 ## Tech Stack
 

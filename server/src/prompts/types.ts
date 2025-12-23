@@ -18,7 +18,10 @@ export type SlideStyle =
   | 'watercolor'
   | 'newspaper'
   | 'flat-design'
-  | 'gradient-mesh';
+  | 'gradient-mesh'
+  | 'sci-fi-hud'
+  | 'deep-ocean'
+  | 'dev-console';
 
 export type AspectRatio = '16:9' | '4:3' | '1:1' | '9:16';
 

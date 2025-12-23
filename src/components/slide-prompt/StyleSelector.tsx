@@ -1,7 +1,7 @@
-import { 
+import {
   Briefcase, Cpu, Palette, BarChart3, GraduationCap, Gamepad2,
-  Minus, Zap, PenTool, Layers, Clock, Box, Droplets, Newspaper, 
-  Square, Blend
+  Minus, Zap, PenTool, Layers, Clock, Box, Droplets, Newspaper,
+  Square, Blend, Crosshair, Waves, Terminal
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -127,6 +127,27 @@ const styleOptions: StyleOption[] = [
     description: 'Flowing color blends',
     icon: Blend,
     previewColors: ['hsl(280 80% 60%)', 'hsl(200 90% 60%)', 'hsl(330 80% 60%)']
+  },
+  {
+    id: 'sci-fi-hud',
+    name: 'Sci-Fi HUD',
+    description: 'Cyberpunk tech schematics',
+    icon: Crosshair,
+    previewColors: ['hsl(185 100% 50%)', 'hsl(25 100% 55%)', 'hsl(220 30% 8%)']
+  },
+  {
+    id: 'deep-ocean',
+    name: 'Deep Ocean',
+    description: 'Nature documentary style',
+    icon: Waves,
+    previewColors: ['hsl(180 100% 40%)', 'hsl(210 50% 20%)', 'hsl(210 60% 12%)']
+  },
+  {
+    id: 'dev-console',
+    name: 'Dev Console',
+    description: 'Software architecture docs',
+    icon: Terminal,
+    previewColors: ['hsl(45 100% 50%)', 'hsl(0 0% 70%)', 'hsl(0 0% 8%)']
   }
 ];
 

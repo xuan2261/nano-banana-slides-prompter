@@ -174,6 +174,9 @@ export const styleDescriptions: Record<SlideStyle, string> = {
   newspaper: 'editorial print design with bold headlines, column layouts, serif typography zones, black and white with single accent color, newsprint texture, classic journalism aesthetic',
   'flat-design': 'flat design style with bold solid colors, geometric shapes, no shadows or gradients, clean vector aesthetic, simple iconographic elements, modern minimalism',
   'gradient-mesh': 'modern gradient mesh with flowing color transitions, abstract fluid backgrounds, mesh gradients with smooth blends, contemporary color combinations, organic flowing shapes',
+  'sci-fi-hud': 'futuristic sci-fi HUD interface style with dark backgrounds (#0A0A12), cyan/teal primary accents (#00D4FF), orange secondary highlights (#FF6B35), technical schematics with wireframe diagrams, targeting reticles, data overlays with progress bars and stat displays, glowing edge lines, holographic effects, detailed spacecraft or vehicle blueprints, measurement annotations, modular panel layouts with rounded corners, sensor readout aesthetics, high-tech military or aerospace feel',
+  'deep-ocean': 'nature documentary scientific analysis style with deep blue-gray oceanic backgrounds (#1A2A3A to #0D1B2A gradient), teal/cyan accent colors (#00CED1), white text with subtle glow, animal silhouettes and anatomical diagrams, scientific data visualizations with comparison charts and force diagrams, measurement callouts with labeled arrows, documentary-style layouts reminiscent of National Geographic or BBC nature graphics, educational yet cinematic atmosphere, professional scientific illustration aesthetic, natural world themed iconography',
+  'dev-console': 'developer console and software architecture style with very dark charcoal/black backgrounds (#0D0D0D to #1A1A1A), gold/amber primary accent color (#FFB800, #E6A800), white and light gray secondary text, technical system diagrams with flowcharts and data flow arrows, modular architecture blocks with clean geometric shapes, code/developer documentation aesthetic, subtle grid or matrix patterns, memory structure visualizations, API and system integration diagrams, organized hierarchical layouts, software engineering focus with coordinate systems and data structures, warm gold highlights on dark surfaces',
 };
 
 export const colorPaletteDescriptions: Record<ColorPalette, string> = {
@@ -246,19 +249,19 @@ Generate prompts for these ${slideCount} slides (use these exact slide numbers i
 
 1. **Slide 1: Title/Cover** - Bold opening with main title, subtitle, and thematic visual. Footer: subtle accent line only, no page number needed.
 ${slideCount > 2 ? Array.from({ length: Math.min(slideCount - 2, 8) }, (_, i) => {
-  const slideNum = i + 2;
-  const slideTypes = [
-    `Content slide with key points. Footer should include page number '${slideNum}'.`,
-    `Process slide with step-by-step breakdown. Footer: 'Step ${slideNum - 1} of ${slideCount - 2}' indicator.`,
-    `Data/insight slide with charts. Footer: source attribution + page '${slideNum}'.`,
-    `Comparison slide with multi-column layout. Footer: page number '${slideNum}'.`,
-    `Deep-dive explanation slide. Footer: section name + page '${slideNum}'.`,
-    `Visual showcase slide. Footer: minimal, just page '${slideNum}'.`,
-    `Quote or highlight slide. Footer: attribution + page '${slideNum}'.`,
-    `Timeline/roadmap slide. Footer: progress indicator + page '${slideNum}'.`
-  ];
-  return `${slideNum}. **Slide ${slideNum}** - ${slideTypes[i % slideTypes.length]}`;
-}).join('\n') : ''}
+    const slideNum = i + 2;
+    const slideTypes = [
+      `Content slide with key points. Footer should include page number '${slideNum}'.`,
+      `Process slide with step-by-step breakdown. Footer: 'Step ${slideNum - 1} of ${slideCount - 2}' indicator.`,
+      `Data/insight slide with charts. Footer: source attribution + page '${slideNum}'.`,
+      `Comparison slide with multi-column layout. Footer: page number '${slideNum}'.`,
+      `Deep-dive explanation slide. Footer: section name + page '${slideNum}'.`,
+      `Visual showcase slide. Footer: minimal, just page '${slideNum}'.`,
+      `Quote or highlight slide. Footer: attribution + page '${slideNum}'.`,
+      `Timeline/roadmap slide. Footer: progress indicator + page '${slideNum}'.`
+    ];
+    return `${slideNum}. **Slide ${slideNum}** - ${slideTypes[i % slideTypes.length]}`;
+  }).join('\n') : ''}
 ${slideCount > 1 ? `${slideCount}. **Slide ${slideCount}: Conclusion** - Key takeaways. Footer: contact/website info or just page '${slideCount}'.` : ''}
 
 ## Critical Requirements

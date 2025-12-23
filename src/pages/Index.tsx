@@ -1,18 +1,16 @@
 import { useState } from 'react';
-import { Sparkles, Presentation, Loader2 } from 'lucide-react';
-import { useMutation } from '@tanstack/react-query';
+import { Sparkles, Presentation, Loader2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ContentInput } from '@/components/slide-prompt/ContentInput';
 import { StyleSelector } from '@/components/slide-prompt/StyleSelector';
 import { PresentationSettings } from '@/components/slide-prompt/PresentationSettings';
 import { PromptOutput } from '@/components/slide-prompt/PromptOutput';
-import { generatePrompt as generatePromptAPI } from '@/lib/api';
+import { useStreamingGeneration } from '@/hooks/useStreamingGeneration';
 import { useToast } from '@/hooks/use-toast';
 import type {
   ContentInput as ContentInputType,
   SlideStyle,
   PresentationSettings as PresentationSettingsType,
-  GeneratedPrompt
 } from '@/types/slidePrompt';
 
 const defaultContent: ContentInputType = {
@@ -36,53 +34,38 @@ export default function Index() {
   const [content, setContent] = useState<ContentInputType>(defaultContent);
   const [style, setStyle] = useState<SlideStyle>('professional');
   const [settings, setSettings] = useState<PresentationSettingsType>(defaultSettings);
-  const [generatedPrompt, setGeneratedPrompt] = useState<GeneratedPrompt | null>(null);
   const { toast } = useToast();
 
-  const generateMutation = useMutation({
-    mutationFn: generatePromptAPI,
-    onSuccess: (data) => {
-      if (data.success && data.prompts) {
-        setGeneratedPrompt({
-          plainText: data.prompts,
-          slides: data.slides || [],
-          jsonFormat: {
-            model: 'nano-banana-pro',
-            messages: [
-              { role: 'system', content: 'Nano Banana Pro optimized prompts' },
-              { role: 'user', content: data.prompts },
-            ],
-          },
-        });
-        const slideCount = data.slides?.length || data.metadata?.slideCount || settings.slideCount;
-        toast({
-          title: 'Prompts Generated',
-          description: `Created ${slideCount} slide prompts`,
-        });
-      } else {
-        toast({
-          title: 'Generation Failed',
-          description: data.error || 'Unknown error occurred',
-          variant: 'destructive',
-        });
-      }
-    },
-    onError: (error) => {
-      toast({
-        title: 'Generation Failed',
-        description: error instanceof Error ? error.message : 'Failed to connect to server',
-        variant: 'destructive',
-      });
-    },
-  });
+  const {
+    isGenerating,
+    slides,
+    error,
+    generatedPrompt,
+    generate,
+    cancel,
+  } = useStreamingGeneration();
 
   const handleGenerate = () => {
-    generateMutation.mutate({
+    generate({
       content,
       style,
       settings,
     });
   };
+
+  // Show toast on error
+  if (error) {
+    toast({
+      title: 'Generation Failed',
+      description: error,
+      variant: 'destructive',
+    });
+  }
+
+  // Show toast on completion
+  if (generatedPrompt && !isGenerating && slides.length > 0) {
+    // We'll show this via the UI instead of a toast to avoid spam
+  }
 
   const hasContent =
     (content.type === 'text' && content.text.trim()) ||
@@ -162,24 +145,27 @@ export default function Index() {
               <PresentationSettings value={settings} onChange={setSettings} />
             </section>
 
-            <Button
-              onClick={handleGenerate}
-              disabled={!hasContent || generateMutation.isPending}
-              size="lg"
-              className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/25 transition-all duration-300 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5"
-            >
-              {generateMutation.isPending ? (
-                <>
-                  <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                  Generating...
-                </>
-              ) : (
-                <>
-                  <Sparkles className="h-5 w-5 mr-2" />
-                  Generate Prompt
-                </>
-              )}
-            </Button>
+            {isGenerating ? (
+              <Button
+                onClick={cancel}
+                variant="destructive"
+                size="lg"
+                className="w-full h-14 text-lg font-semibold shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
+              >
+                <X className="h-5 w-5 mr-2" />
+                Cancel Generation
+              </Button>
+            ) : (
+              <Button
+                onClick={handleGenerate}
+                disabled={!hasContent}
+                size="lg"
+                className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/25 transition-all duration-300 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5"
+              >
+                <Sparkles className="h-5 w-5 mr-2" />
+                Generate Prompt
+              </Button>
+            )}
           </div>
 
           {/* Right Column - Output */}
@@ -190,7 +176,12 @@ export default function Index() {
               </span>
               <h2 className="text-xl font-semibold text-foreground">Your Prompt</h2>
             </div>
-            <PromptOutput prompt={generatedPrompt} />
+            <PromptOutput
+              prompt={generatedPrompt}
+              isStreaming={isGenerating}
+              streamingSlides={slides}
+              expectedSlideCount={settings.slideCount}
+            />
           </div>
         </div>
       </main>

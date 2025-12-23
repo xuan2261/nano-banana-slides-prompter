@@ -62,4 +62,8 @@ console.log(`Starting server on port ${port}...`);
 export default {
   port,
   fetch: app.fetch,
+  // Increase idle timeout for streaming SSE connections (default is 10s)
+  // Max is 255 seconds (~4 min) to accommodate LLMs with long "thinking" phases
+  idleTimeout: 255,
 };
+

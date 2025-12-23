@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Check, Copy, ChevronDown, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -8,12 +8,25 @@ import type { ParsedSlide } from '@/types/slidePrompt';
 interface SlideCardProps {
   slide: ParsedSlide;
   defaultOpen?: boolean;
+  isNew?: boolean;
+  animationDelay?: number;
 }
 
-export function SlideCard({ slide, defaultOpen = false }: SlideCardProps) {
+export function SlideCard({ slide, defaultOpen = false, isNew = false, animationDelay = 0 }: SlideCardProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [copied, setCopied] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(!isNew);
   const { toast } = useToast();
+
+  // Mark as animated after the animation completes
+  useEffect(() => {
+    if (isNew && !hasAnimated) {
+      const timer = setTimeout(() => {
+        setHasAnimated(true);
+      }, 500 + animationDelay);
+      return () => clearTimeout(timer);
+    }
+  }, [isNew, hasAnimated, animationDelay]);
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -35,11 +48,20 @@ export function SlideCard({ slide, defaultOpen = false }: SlideCardProps) {
     }
   };
 
+  const animationClass = isNew && !hasAnimated
+    ? 'animate-slide-up'
+    : '';
+
+  const animationStyle = isNew && !hasAnimated
+    ? { animationDelay: `${animationDelay}ms` }
+    : {};
+
   return (
     <Collapsible
       open={isOpen}
       onOpenChange={setIsOpen}
-      className="border border-border/50 rounded-lg bg-card/50 backdrop-blur-sm overflow-hidden transition-all duration-200 hover:border-border"
+      className={`border border-border/50 rounded-lg bg-card/50 backdrop-blur-sm overflow-hidden transition-all duration-200 hover:border-border ${animationClass}`}
+      style={animationStyle}
     >
       <CollapsibleTrigger asChild>
         <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-muted/30 transition-colors">
@@ -88,3 +110,4 @@ export function SlideCard({ slide, defaultOpen = false }: SlideCardProps) {
     </Collapsible>
   );
 }
+
