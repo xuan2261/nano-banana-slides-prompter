@@ -77,6 +77,9 @@ export function generatePrompt(config: SlidePromptConfig): GeneratedPrompt {
   
   const systemPrompt = `You are an expert presentation designer and visual artist. Generate professional slide content with detailed visual descriptions that can be used to create stunning presentations. Follow the specified style guidelines precisely.`;
   
+  const styleName = style.charAt(0).toUpperCase() + style.slice(1).replace('-', ' ');
+  const aspectRatioInfo = aspectRatioDescriptions[settings.aspectRatio];
+  
   const userPrompt = `Create a ${settings.slideCount}-slide presentation with the following specifications:
 
 ## Content
@@ -85,7 +88,7 @@ ${contentSummary}
 Keep visuals, titles, and callouts coherent with the topic/context above; avoid repeating the topic verbatim on every slide unless it improves clarity.
 
 ## Visual Style
-**Style:** ${style.charAt(0).toUpperCase() + style.slice(1).replace('-', ' ')}
+**Style:** ${styleName}
 ${styleDescriptions[style]}
 
 ## Color Palette
@@ -95,7 +98,7 @@ ${colorPaletteDescriptions[settings.colorPalette]}
 ${layoutDescriptions[settings.layoutStructure]}
 
 ## Format
-**Aspect Ratio:** ${settings.aspectRatio} - ${aspectRatioDescriptions[settings.aspectRatio]}
+**Aspect Ratio:** ${settings.aspectRatio} - ${aspectRatioInfo}
 
 ## Component & Visual System
 Leverage these reusable components consistently across all slides:

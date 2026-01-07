@@ -41,21 +41,17 @@ export type ColorPalette =
   | 'arctic-frost'
   | 'neon-night';
 
-// Character presenter types
 export type RenderStyle =
-  | 'pixar'      // 3D animated (Pixar/Disney)
-  | 'real'       // Photorealistic human
-  | 'anime'      // Japanese animation
-  | 'cartoon'    // 2D Western cartoon
-  | 'sketch'     // Hand-drawn pencil/ink
-  | 'chibi'      // Cute small-proportioned
-  | 'low-poly'   // Geometric 3D
-  | 'mascot';    // Corporate mascot style
+  | 'pixar'
+  | 'real'
+  | 'anime'
+  | 'cartoon'
+  | 'sketch'
+  | 'chibi'
+  | 'low-poly'
+  | 'mascot';
 
-export type CharacterGender =
-  | 'none'       // Unspecified (default) - don't include gender in prompt
-  | 'male'
-  | 'female';
+export type CharacterGender = 'none' | 'male' | 'female';
 
 export interface CharacterSettings {
   enabled: boolean;
@@ -106,4 +102,19 @@ export interface GeneratedPrompt {
       content: string;
     }>;
   };
+}
+
+export type SessionStatus = 'idle' | 'generating' | 'completed' | 'error';
+
+export interface Session {
+  id: string;
+  title: string;
+  isDefaultTitle?: boolean;
+  createdAt: number;
+  updatedAt: number;
+  config: SlidePromptConfig;
+  status: SessionStatus;
+  slides: ParsedSlide[];
+  generatedPrompt: GeneratedPrompt | null;
+  error: string | null;
 }

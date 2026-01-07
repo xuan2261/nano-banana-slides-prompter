@@ -68,55 +68,43 @@ const generateSchema = z.object({
       gender: z.enum(['none', 'male', 'female']),
     }).optional(),
   }),
+  llmConfig: z.object({
+    apiKey: z.string(),
+    baseURL: z.string(),
+    model: z.string(),
+  }).optional(),
 });
 
 export const promptRouter = new Hono();
 
-/**
- * Build content text from request body.
- * Combines content from ALL tabs that have data, not just the selected tab.
- * Returns both text content and optional PDF data for vision models.
- */
 function extractContentText(body: z.infer<typeof generateSchema>): { text: string; pdfData?: string } {
   const contentParts: string[] = [];
   let pdfData: string | undefined;
 
-  // Add text content if present
   if (body.content.text?.trim()) {
     contentParts.push(`## User Prompt/Text\n${body.content.text.trim()}`);
   }
-
-  // Add topic if present
   if (body.content.topic?.trim()) {
     contentParts.push(`## Topic Focus\n${body.content.topic.trim()}`);
   }
-
-  // Add file content if present
   if (body.content.fileContent?.trim()) {
     const fileName = body.content.fileName || 'uploaded file';
-
     if (body.content.fileType === 'pdf') {
-      // For PDFs, store the base64 data separately for vision models
       pdfData = body.content.fileContent;
       contentParts.push(`## PDF Document: "${fileName}"\n[PDF file attached - analyze the document content to create presentation slides]`);
     } else {
-      // For text/CSV, include content directly
       contentParts.push(`## Content from File "${fileName}"\n${body.content.fileContent.trim()}`);
     }
   }
-
-  // Add URL content if present
   if (body.content.urlContent?.trim()) {
     contentParts.push(`## Content from URL "${body.content.url}"\n${body.content.urlContent.trim()}`);
   } else if (body.content.url?.trim()) {
-    // URL provided but not yet extracted
     contentParts.push(`## Reference URL\nCreate a presentation about the content from: ${body.content.url}`);
   }
 
   return { text: contentParts.join('\n\n'), pdfData };
 }
 
-// Original non-streaming endpoint (kept for backwards compatibility)
 promptRouter.post(
   '/generate-prompt',
   zValidator('json', generateSchema),
@@ -148,7 +136,8 @@ promptRouter.post(
       const generatedPrompts = await generateWithLLM(
         NANO_BANANA_PRO_SYSTEM_PROMPT,
         userPrompt,
-        pdfData
+        pdfData,
+        body.llmConfig
       );
 
       // Parse the output into individual slides
@@ -178,17 +167,11 @@ promptRouter.post(
   }
 );
 
-/**
- * Parse slides progressively from accumulated buffer.
- * Returns newly completed slides and leaves partial slide in buffer.
- */
 function parseNewSlides(buffer: string, alreadyEmitted: Set<number>): {
   newSlides: ParsedSlide[];
   updatedBuffer: string;
 } {
   const newSlides: ParsedSlide[] = [];
-
-  // Match complete slides: **Slide N: Title** followed by ``` code block ```
   const slidePattern = /\*\*Slide\s+(\d+):\s*([^*]+)\*\*\s*```(?:\w*\n)?([\s\S]*?)```/gi;
 
   let match;
@@ -203,30 +186,16 @@ function parseNewSlides(buffer: string, alreadyEmitted: Set<number>): {
       newSlides.push({ slideNumber, title, prompt });
       alreadyEmitted.add(slideNumber);
     }
-
     lastMatchEnd = Math.max(lastMatchEnd, match.index + match[0].length);
   }
 
-  // Keep only the unmatched portion (potential partial slide)
-  // But we need to be careful to keep enough context for partial matches
-  // Find the last **Slide marker that might be incomplete
   const lastSlideMarker = buffer.lastIndexOf('**Slide');
   if (lastSlideMarker > lastMatchEnd) {
-    // There's a partial slide starting, keep from there
-    return {
-      newSlides,
-      updatedBuffer: buffer.slice(lastSlideMarker),
-    };
+    return { newSlides, updatedBuffer: buffer.slice(lastSlideMarker) };
   }
-
-  // Otherwise just keep trailing content that might be start of new slide
-  return {
-    newSlides,
-    updatedBuffer: buffer.slice(lastMatchEnd),
-  };
+  return { newSlides, updatedBuffer: buffer.slice(lastMatchEnd) };
 }
 
-// Streaming endpoint using SSE
 promptRouter.post(
   '/generate-prompt-stream',
   zValidator('json', generateSchema),
@@ -264,7 +233,8 @@ promptRouter.post(
         for await (const chunk of generateWithLLMStream(
           NANO_BANANA_PRO_SYSTEM_PROMPT,
           userPrompt,
-          pdfData
+          pdfData,
+          body.llmConfig
         )) {
           buffer += chunk;
 
