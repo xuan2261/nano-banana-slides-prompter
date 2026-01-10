@@ -4,6 +4,31 @@ Generate optimized prompts for Nano Banana Pro Slides - Generate slides using AI
 
 ![App Screenshot](./docs/samples/Screenshot.png)
 
+## 🆕 v1.0.5 Update - Internationalization & Session Management!
+
+Major update with internationalization support and session management features!
+
+**What's New:**
+- 🌐 **Internationalization (i18n)** - Full support for English and Chinese (中文) with react-i18next
+- 💾 **Session Management** - Save, load, and manage multiple presentation sessions
+- ⚙️ **LLM Settings Dialog** - Configure API keys, base URL, and model per user in browser
+- 🔄 **State Management** - Zustand-based store for better state handling
+- 🔒 **Security Updates** - All npm vulnerabilities fixed (7 → 0)
+- ⚡ **Vite 7** - Upgraded to latest Vite for better performance
+- 📦 **Dependency Updates** - 120+ packages updated for security and stability
+
+**Technical Improvements:**
+- Hybrid LLM configuration: server defaults + optional user overrides
+- Session persistence with localStorage
+- RESTful API endpoints for sessions and settings
+- Improved error handling and user feedback
+- Enhanced UI with session sidebar
+
+**Credits:**
+Special thanks to [@movclantian](https://github.com/movclantian) for contributing the internationalization and session management features!
+
+---
+
 ## 🆕 v1.0.4 Update - Character Presenter!
 
 Introducing the **Character Presenter** feature! Add a consistent animated presenter across all your slides with extensive customization options.
@@ -32,9 +57,6 @@ Introducing the **Character Presenter** feature! Add a consistent animated prese
   <img src="./docs/samples/sample25.png" width="240" alt="Sample 25"/>
   <img src="./docs/samples/sample26.png" width="240" alt="Sample 26"/>
 </p>
-
----
-
 ## 🆕 v1.0.3 Update - Even More Amazing Results!
 
 We've made significant improvements to the prompt generation engine. The results are now more cinematic, feature-rich, and visually stunning than ever before!
@@ -200,4 +222,4 @@ docker-compose up -d
 
 ## Version
 
-v1.0.4
+v1.0.5
