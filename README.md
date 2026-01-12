@@ -1,157 +1,33 @@
 # Nano Banana Slides Prompter
 
-Generate optimized prompts for Nano Banana Pro Slides - Generate slides using AI.
+Generate optimized prompts for Nano Banana Pro Slides - AI-powered slide generation.
 
 ![App Screenshot](./docs/samples/Screenshot.png)
 
-## 🆕 v1.0.6 Update - Dynamic Character & Slide Generation!
+## Features
 
-Major improvements to character generation and slide type intelligence!
-
-**What's New:**
-- 🎭 **Dynamic Character Generation** - Characters are now generated based on your content, topic, and audience instead of using generic defaults
-- 🧠 **Content-Aware Slide Types** - LLM analyzes your content and selects optimal slide types from 50+ templates
-- 🎯 **Hybrid Slide System** - Smart fallback to category-based templates if analysis fails
-- 🦊 **Non-Human Characters** - Support for animals, robots, mascots, animated objects based on content context
-- ⚡ **Parallel Processing** - Character and content analysis run simultaneously for no added latency
-
-**Slide Type Categories (50+ templates):**
-- Opening: dramatic titles, problem statements, hooks
-- Concept: diagrams, metaphors, breakdowns, ecosystems
-- Data: charts, dashboards, trends, correlations
-- Process: timelines, flowcharts, flywheels, journeys
-- Technical: architecture, stacks, APIs, infrastructure
-- Business: strategy, ROI, market analysis, roadmaps
-- Comparison: side-by-side, before/after, feature matrices
-- Examples: case studies, testimonials, demos
-- Educational: definitions, examples, quizzes
-- Closing: summaries, CTAs, Q&A
-
-**New Sample Slides (v1.0.6):**
-
-<p>
-  <img src="./docs/samples/sample27.jpeg" width="240" alt="Sample 27"/>
-  <img src="./docs/samples/sample28.jpeg" width="240" alt="Sample 28"/>
-  <img src="./docs/samples/sample29.jpeg" width="240" alt="Sample 29"/>
-</p>
-<p>
-  <img src="./docs/samples/sample30.png" width="240" alt="Sample 30"/>
-  <img src="./docs/samples/sample31.png" width="240" alt="Sample 31"/>
-  <img src="./docs/samples/sample32.jpeg" width="240" alt="Sample 32"/>
-</p>
-
----
-
-## 🆕 v1.0.5 Update - Internationalization & Session Management!
-
-Major update with internationalization support and session management features!
-
-**What's New:**
-- 🌐 **Internationalization (i18n)** - Full support for English and Chinese (中文) with react-i18next
-- 💾 **Session Management** - Save, load, and manage multiple presentation sessions
-- ⚙️ **LLM Settings Dialog** - Configure API keys, base URL, and model per user in browser
-- 🔄 **State Management** - Zustand-based store for better state handling
-- 🔒 **Security Updates** - All npm vulnerabilities fixed (7 → 0)
-- ⚡ **Vite 7** - Upgraded to latest Vite for better performance
-- 📦 **Dependency Updates** - 120+ packages updated for security and stability
-
-**Technical Improvements:**
-- Hybrid LLM configuration: server defaults + optional user overrides
-- Session persistence with localStorage
-- RESTful API endpoints for sessions and settings
-- Improved error handling and user feedback
-- Enhanced UI with session sidebar
-
-**Credits:**
-Special thanks to [@movclantian](https://github.com/movclantian) for contributing the internationalization and session management features!
-
----
-
-## 🆕 v1.0.4 Update - Character Presenter!
-
-Introducing the **Character Presenter** feature! Add a consistent animated presenter across all your slides with extensive customization options.
-
-**What's New:**
-- 🎭 **Character Presenter** - Add an animated character to guide your presentation
-- 🎨 **8 Render Styles** - Pixar, Real, Anime, Cartoon, Sketch, Chibi, Low-Poly, Mascot
-- ⚧️ **Gender Options** - Male, Female, or let AI decide
-- 🎯 **24 Character Combinations** - Mix and match styles with gender preferences
-- 🔄 **Adaptive Styling** - Characters automatically adapt to match your slide style
-
-**New Sample Slides (v1.0.4):**
-
-<p>
-  <img src="./docs/samples/sample18.jpeg" width="240" alt="Sample 18"/>
-  <img src="./docs/samples/sample19.jpeg" width="240" alt="Sample 19"/>
-  <img src="./docs/samples/sample20.jpeg" width="240" alt="Sample 20"/>
-</p>
-<p>
-  <img src="./docs/samples/sample21.png" width="240" alt="Sample 21"/>
-  <img src="./docs/samples/sample22.png" width="240" alt="Sample 22"/>
-  <img src="./docs/samples/sample23.jpeg" width="240" alt="Sample 23"/>
-</p>
-<p>
-  <img src="./docs/samples/sample24.png" width="240" alt="Sample 24"/>
-  <img src="./docs/samples/sample25.png" width="240" alt="Sample 25"/>
-  <img src="./docs/samples/sample26.png" width="240" alt="Sample 26"/>
-</p>
-## 🆕 v1.0.3 Update - Even More Amazing Results!
-
-We've made significant improvements to the prompt generation engine. The results are now more cinematic, feature-rich, and visually stunning than ever before!
-
-**What's New:**
-- 🎭 **Style Personas** - Each style now has a unique creative identity that guides the AI
-- 🎨 **Expanded Visual Vocabulary** - 200+ visual terms across 24 categories
-- 📝 **Chain-of-Thought Prompting** - AI now thinks through each visual decision
-- 🖼️ **Richer Backgrounds** - More texture, pattern, and atmospheric options
-- 📄 **CSV File Support** - Upload CSV data for data-driven presentations
-
-**New Sample Slides (v1.0.3):**
-
-<p>
-  <img src="./docs/samples/sample9.png" width="240" alt="Sample 9"/>
-  <img src="./docs/samples/sample10.jpeg" width="240" alt="Sample 10"/>
-  <img src="./docs/samples/sample11.png" width="240" alt="Sample 11"/>
-</p>
-<p>
-  <img src="./docs/samples/sample12.jpeg" width="240" alt="Sample 12"/>
-  <img src="./docs/samples/sample13.jpeg" width="240" alt="Sample 13"/>
-  <img src="./docs/samples/sample14.png" width="240" alt="Sample 14"/>
-</p>
-<p>
-  <img src="./docs/samples/sample15.jpeg" width="240" alt="Sample 15"/>
-  <img src="./docs/samples/sample16.png" width="240" alt="Sample 16"/>
-  <img src="./docs/samples/sample17.png" width="240" alt="Sample 17"/>
-</p>
+- **20 Visual Styles**: Professional, Technical, Creative, Educational, and more
+- **Character Presenter**: 8 render styles (Pixar, Anime, Cartoon, etc.) with dynamic generation
+- **50+ Slide Templates**: Content-aware selection from Opening, Concept, Data, Process, Technical, Business categories
+- **Multiple Input Methods**: Text, URL extraction, CSV upload
+- **Session Management**: Save, load, and manage multiple presentations
+- **Internationalization**: English and Chinese support
+- **Configurable LLM**: OpenAI, OpenRouter, Ollama compatible
 
 ## Sample Slides
 
-Slides generated using prompts from this tool:
-
 <p>
-  <img src="./docs/samples/sample6.jpeg" width="240" alt="Sample 1"/>
-  <img src="./docs/samples/sample8.jpeg" width="240" alt="Sample 2"/>
-  <img src="./docs/samples/sample3.jpeg" width="240" alt="Sample 3"/>
+  <img src="./docs/samples/sample27.jpeg" width="180" alt="Sample"/>
+  <img src="./docs/samples/sample28.jpeg" width="180" alt="Sample"/>
+  <img src="./docs/samples/sample29.jpeg" width="180" alt="Sample"/>
+  <img src="./docs/samples/sample30.png" width="180" alt="Sample"/>
 </p>
 <p>
-  <img src="./docs/samples/sample4.jpeg" width="240" alt="Sample 4"/>
-  <img src="./docs/samples/sample5.jpeg" width="240" alt="Sample 5"/>
-  <img src="./docs/samples/sample1.jpeg" width="240" alt="Sample 6"/>
+  <img src="./docs/samples/sample21.png" width="180" alt="Sample"/>
+  <img src="./docs/samples/sample22.png" width="180" alt="Sample"/>
+  <img src="./docs/samples/sample9.png" width="180" alt="Sample"/>
+  <img src="./docs/samples/sample10.jpeg" width="180" alt="Sample"/>
 </p>
-<p>
-  <img src="./docs/samples/sample7.jpeg" width="240" alt="Sample 7"/>
-  <img src="./docs/samples/sample2.jpeg" width="240" alt="Sample 8"/>
-</p>
-
-## Features
-
-- Multiple visual styles (Professional, Technical, Creative, Educational, and more)
-- Character Presenter with 8 render styles and 24 customization combinations
-- Configurable color palettes and layouts
-- Collapsible slide previews with individual copy buttons
-- URL content extraction for automatic content generation
-- CSV file upload for data-driven presentations
-- Configurable LLM backend (OpenAI, OpenRouter, Ollama, etc.)
 
 ## Quick Start
 
@@ -179,7 +55,7 @@ Create `/server/.env` from the example:
 cp server/.env.example server/.env
 ```
 
-Edit the `.env` file with your LLM configuration:
+Edit the `.env` file:
 
 ```env
 OPENAI_API_BASE=https://api.openai.com/v1
@@ -200,30 +76,17 @@ npm run dev
 
 ## Docker Deployment
 
-You can run the entire stack locally using Docker Compose.
+### Local Development
 
-### Prerequisites
+```sh
+docker-compose up --build
+```
 
-- Docker
-- Docker Compose
+Access at http://localhost:8080
 
-### Running with Docker
+### Production (GHCR Images)
 
-1.  **Build and Run**:
-    ```sh
-    docker-compose up --build
-    ```
-
-2.  **Access the Application**:
-    - Open [http://localhost:8080](http://localhost:8080) in your browser.
-
-The `docker-compose.yml` orchestrates:
-- **Frontend**: Served via Nginx on port 8080.
-- **Backend**: Hono server running on internal port 3001.
-
-### Deploy from Images (Production)
-
-To deploy using the pre-built images from GitHub Container Registry (GHCR), create a `docker-compose.yml` file on your server:
+Create `docker-compose.yml`:
 
 ```yaml
 services:
@@ -245,19 +108,91 @@ services:
     restart: always
 ```
 
-Then run:
+Run:
 
 ```sh
 docker-compose up -d
 ```
 
+## Desktop App
+
+The application is also available as a cross-platform desktop app.
+
+### Download
+
+Download the latest release from [GitHub Releases](https://github.com/nomie7/nano-banana-slides-prompter/releases).
+
+| Platform | File |
+|----------|------|
+| Windows | `Nano-Banana-Slides-Prompter-{version}-win-x64.exe` |
+| macOS (Apple Silicon) | `Nano-Banana-Slides-Prompter-{version}-mac-arm64.dmg` |
+| macOS (Intel) | `Nano-Banana-Slides-Prompter-{version}-mac-x64.dmg` |
+| Linux | `Nano-Banana-Slides-Prompter-{version}-linux-x64.AppImage` |
+
+### Desktop Development
+
+```sh
+# Install all dependencies
+npm install
+cd server && bun install && cd ..
+cd desktop && npm install && cd ..
+
+# Run desktop app in dev mode
+npm run electron:dev
+```
+
+### Building Desktop App
+
+```sh
+cd desktop && npm run build
+```
+
+Output files are generated in `desktop/release/`.
 
 ## Tech Stack
 
-- **Frontend**: React, TypeScript, Vite, Tailwind CSS, shadcn/ui
-- **Backend**: Bun, Hono, OpenAI SDK
-- **UI Components**: Radix UI primitives
+| Layer | Technologies |
+|-------|--------------|
+| Frontend | React 19, TypeScript, Vite 7, Tailwind CSS, shadcn/ui, Zustand |
+| Backend | Bun, Hono, OpenAI SDK, Cheerio |
+| Desktop | Electron 33, electron-builder, electron-updater |
+| UI | Radix UI primitives, lucide-react icons |
+| i18n | react-i18next (EN/ZH) |
+
+## Documentation
+
+- [Project Overview & PDR](./docs/project-overview-pdr.md)
+- [Codebase Summary](./docs/codebase-summary.md)
+- [Code Standards](./docs/code-standards.md)
+- [System Architecture](./docs/system-architecture.md)
+
+## API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/generate-prompt-stream` | POST | Generate prompts (SSE) |
+| `/api/extract-url` | POST | Extract content from URL |
+| `/api/sessions` | GET/POST | Session management |
+| `/api/settings/llm` | GET | LLM configuration |
+| `/health` | GET | Health check |
 
 ## Version
 
-v1.0.6
+**v1.0.6** - Dynamic character generation, content-aware slide types
+
+### Changelog
+
+| Version | Highlights |
+|---------|------------|
+| 1.0.6 | Dynamic character generation, 50+ slide templates, content-aware selection |
+| 1.0.5 | i18n (EN/ZH), session management, Zustand state, Vite 7 |
+| 1.0.4 | Character presenter with 8 render styles |
+| 1.0.3 | Style personas, expanded visual vocabulary, CSV support |
+
+## License
+
+GPL-3.0-or-later
+
+## Credits
+
+- [@movclantian](https://github.com/movclantian) - i18n and session management features

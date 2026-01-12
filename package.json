@@ -11,7 +11,10 @@
     "build:dev": "vite build --mode development",
     "build:server": "cd server && bun run build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:desktop": "npm run build && npm run build:desktop:copy",
+    "build:desktop:copy": "if not exist desktop\\renderer mkdir desktop\\renderer && xcopy /E /Y dist\\* desktop\\renderer\\",
+    "electron:dev": "npm run build && npm run build:desktop:copy && cd desktop && npm run dev"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

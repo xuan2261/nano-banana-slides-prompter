@@ -10,7 +10,17 @@ const app = new Hono();
 
 app.use('*', logger());
 app.use('/api/*', cors({
-  origin: ['http://localhost:8080', 'http://[::]:8080', 'http://127.0.0.1:8080', 'http://localhost:5173'],
+  origin: (origin) => {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return origin as string;
+    // Allow localhost with any port (for Electron dynamic ports)
+    if (/^https?:\/\/(localhost|127\.0\.0\.1|\[::1\]|\[::\])(:\d+)?$/.test(origin)) {
+      return origin;
+    }
+    // Allow file:// protocol for Electron production
+    if (origin.startsWith('file://')) return origin;
+    return null;
+  },
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization'],
   maxAge: 86400,
@@ -33,8 +43,15 @@ app.onError((err, c) => {
 const port = Number(process.env.PORT) || 3001;
 console.log(`Starting server on port ${port}...`);
 
-export default {
+// Export server configuration
+const server = {
   port,
   fetch: app.fetch,
   idleTimeout: 255,
 };
+
+// Output PORT for Electron IPC detection (must be after server starts)
+// Bun.serve returns immediately, so we output right away
+console.log(`PORT:${port}`);
+
+export default server;
