@@ -2,8 +2,12 @@
   "name": "nano-banana-slides-prompter-desktop",
   "version": "1.0.6",
   "description": "Desktop application for Nano Banana Slides Prompter",
+  "homepage": "https://github.com/nomie7/nano-banana-slides-prompter",
   "main": "dist/main.js",
-  "author": "Nano Banana Team",
+  "author": {
+    "name": "Nano Banana Team",
+    "email": "nomie7@users.noreply.github.com"
+  },
   "license": "GPL-3.0-or-later",
   "scripts": {
     "dev": "tsc && electron .",
