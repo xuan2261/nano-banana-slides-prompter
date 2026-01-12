@@ -24,14 +24,6 @@ jobs:
           - os: windows-latest
             platform: win
             bun-target: bun-windows-x64
-          - os: macos-13
-            platform: mac
-            arch: x64
-            bun-target: bun-darwin-x64
-          - os: macos-latest
-            platform: mac
-            arch: arm64
-            bun-target: bun-darwin-arm64
 
     steps:
       - name: Checkout
@@ -53,7 +45,6 @@ jobs:
         with:
           path: |
             ~/.cache/electron
-            ~/Library/Caches/electron
             ~/AppData/Local/electron/Cache
           key: ${{ runner.os }}-electron-${{ hashFiles('desktop/package-lock.json') }}
           restore-keys: ${{ runner.os }}-electron-
@@ -63,7 +54,6 @@ jobs:
         with:
           path: |
             ~/.cache/electron-builder
-            ~/Library/Caches/electron-builder
             ~/AppData/Local/electron-builder/Cache
           key: ${{ runner.os }}-electron-builder-${{ hashFiles('desktop/package-lock.json') }}
           restore-keys: ${{ runner.os }}-electron-builder-
@@ -115,18 +105,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Electron app (macOS x64)
-        if: matrix.platform == 'mac' && matrix.arch == 'x64'
-        run: cd desktop && npx electron-builder --mac --x64
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build Electron app (macOS arm64)
-        if: matrix.platform == 'mac' && matrix.arch == 'arm64'
-        run: cd desktop && npx electron-builder --mac --arm64
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Upload artifacts (Linux)
         uses: actions/upload-artifact@v4
         if: matrix.platform == 'linux'
@@ -145,17 +123,6 @@ jobs:
           name: electron-win-x64
           path: |
             desktop/release/*.exe
-          retention-days: 7
-          if-no-files-found: ignore
-
-      - name: Upload artifacts (macOS)
-        uses: actions/upload-artifact@v4
-        if: matrix.platform == 'mac'
-        with:
-          name: electron-mac-${{ matrix.arch }}
-          path: |
-            desktop/release/*.dmg
-            desktop/release/*.zip
           retention-days: 7
           if-no-files-found: ignore
 
@@ -180,8 +147,6 @@ jobs:
         with:
           files: |
             artifacts/**/*.exe
-            artifacts/**/*.dmg
-            artifacts/**/*.zip
             artifacts/**/*.AppImage
             artifacts/**/*.deb
           draft: false
