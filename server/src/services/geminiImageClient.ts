@@ -1,8 +1,10 @@
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai';
+import type { RequestOptions } from '@google/generative-ai';
 
 export interface GeminiImageConfig {
   apiKey: string;
   model?: string;
+  baseURL?: string; // Custom API endpoint (e.g., http://127.0.0.1:8045)
 }
 
 export interface GeneratedImage {
@@ -21,14 +23,21 @@ const DEFAULT_MODEL = 'gemini-2.0-flash-preview-image-generation';
 const defaultConfig: GeminiImageConfig = {
   apiKey: process.env.GEMINI_API_KEY || '',
   model: process.env.GEMINI_MODEL || DEFAULT_MODEL,
+  baseURL: process.env.GEMINI_BASE_URL || undefined,
 };
 
-function createClient(config?: Partial<GeminiImageConfig>) {
+function createClient(config?: Partial<GeminiImageConfig>): {
+  genAI: GoogleGenerativeAI;
+  requestOptions: RequestOptions | undefined;
+} {
   const apiKey = config?.apiKey || defaultConfig.apiKey;
   if (!apiKey) {
     throw new Error('GEMINI_API_KEY is required');
   }
-  return new GoogleGenerativeAI(apiKey);
+  const baseUrl = config?.baseURL || defaultConfig.baseURL;
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const requestOptions: RequestOptions | undefined = baseUrl ? { baseUrl } : undefined;
+  return { genAI, requestOptions };
 }
 
 /**
@@ -39,32 +48,35 @@ export async function generateSlideImage(
   config?: Partial<GeminiImageConfig>
 ): Promise<GenerateImageResult> {
   try {
-    const genAI = createClient(config);
-    const model = genAI.getGenerativeModel({
-      model: config?.model || defaultConfig.model || DEFAULT_MODEL,
-      safetySettings: [
-        {
-          category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-          threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+    const { genAI, requestOptions } = createClient(config);
+    const model = genAI.getGenerativeModel(
+      {
+        model: config?.model || defaultConfig.model || DEFAULT_MODEL,
+        safetySettings: [
+          {
+            category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+            threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+          },
+          {
+            category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+            threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+          },
+          {
+            category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+            threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+          },
+          {
+            category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+            threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+          },
+        ],
+        generationConfig: {
+          // @ts-expect-error responseModalities is valid but not in types yet
+          responseModalities: ['TEXT', 'IMAGE'],
         },
-        {
-          category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-          threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-        },
-        {
-          category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-          threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-        },
-        {
-          category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-          threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-        },
-      ],
-      generationConfig: {
-        // @ts-expect-error responseModalities is valid but not in types yet
-        responseModalities: ['TEXT', 'IMAGE'],
       },
-    });
+      requestOptions
+    );
 
     const result = await model.generateContent(prompt);
     const response = result.response;
@@ -128,8 +140,8 @@ export async function testGeminiConnection(
   config?: Partial<GeminiImageConfig>
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const genAI = createClient(config);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const { genAI, requestOptions } = createClient(config);
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' }, requestOptions);
     await model.generateContent('Say "OK" if you can hear me.');
     return { success: true };
   } catch (error) {

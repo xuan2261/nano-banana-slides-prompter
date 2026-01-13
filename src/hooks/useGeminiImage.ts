@@ -61,7 +61,10 @@ export function useGeminiImage(): UseGeminiImageReturn {
       const response = await fetch(`${baseUrl}/api/gemini/test-connection`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ apiKey: geminiSettings.apiKey }),
+        body: JSON.stringify({
+          apiKey: geminiSettings.apiKey,
+          baseURL: geminiSettings.baseURL || undefined,
+        }),
       });
 
       const data = await response.json();
@@ -118,6 +121,7 @@ export function useGeminiImage(): UseGeminiImageReturn {
             prompts,
             apiKey: geminiSettings.apiKey,
             model: geminiSettings.model,
+            baseURL: geminiSettings.baseURL || undefined,
           }),
         });
 

@@ -51,6 +51,7 @@ export function SettingsDialog() {
   const [geminiApiKey, setGeminiApiKey] = useState('');
   const [geminiModel, setGeminiModel] = useState('');
   const [geminiEnabled, setGeminiEnabled] = useState(false);
+  const [geminiBaseURL, setGeminiBaseURL] = useState('');
 
   useEffect(() => {
     if (!open) return;
@@ -80,6 +81,7 @@ export function SettingsDialog() {
         setGeminiApiKey(storedGeminiSettings?.apiKey || '');
         setGeminiModel(storedGeminiSettings?.model || data.model || '');
         setGeminiEnabled(storedGeminiSettings?.enabled ?? false);
+        setGeminiBaseURL(storedGeminiSettings?.baseURL || '');
       })
       .catch(() => {
         // Gemini config optional, ignore errors
@@ -130,6 +132,7 @@ export function SettingsDialog() {
       apiKey: geminiApiKey.trim(),
       model: geminiModel.trim() || geminiDefaultConfig?.model || '',
       enabled: geminiEnabled,
+      baseURL: geminiBaseURL.trim() || undefined,
     });
 
     toast({ title: t('settings.saved') });
@@ -145,6 +148,7 @@ export function SettingsDialog() {
     setGeminiApiKey('');
     setGeminiModel(geminiDefaultConfig?.model || '');
     setGeminiEnabled(false);
+    setGeminiBaseURL('');
     toast({ title: t('settings.reset') });
   };
 
@@ -163,7 +167,10 @@ export function SettingsDialog() {
       const response = await fetch(`${API_BASE}/api/gemini/test-connection`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ apiKey: geminiApiKey.trim() }),
+        body: JSON.stringify({
+          apiKey: geminiApiKey.trim(),
+          baseURL: geminiBaseURL.trim() || undefined,
+        }),
       });
       const data = await response.json();
 
@@ -301,6 +308,16 @@ export function SettingsDialog() {
                     geminiDefaultConfig?.model || 'gemini-2.0-flash-preview-image-generation',
                 })}
               </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label>{t('gemini.baseURL')}</Label>
+              <Input
+                value={geminiBaseURL}
+                onChange={(e) => setGeminiBaseURL(e.target.value)}
+                placeholder="https://generativelanguage.googleapis.com"
+              />
+              <p className="text-xs text-muted-foreground">{t('gemini.baseURLHint')}</p>
             </div>
 
             <Button

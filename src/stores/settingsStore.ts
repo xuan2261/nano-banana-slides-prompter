@@ -13,6 +13,7 @@ export interface GeminiSettings {
   apiKey: string;
   model: string;
   enabled: boolean;
+  baseURL?: string; // Custom API endpoint (e.g., http://127.0.0.1:8045)
 }
 
 interface SettingsStore {

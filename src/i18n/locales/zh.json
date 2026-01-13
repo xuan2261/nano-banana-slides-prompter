@@ -377,6 +377,8 @@
     "apiKeyHint": "从 Google AI Studio 获取密钥",
     "model": "模型",
     "modelHint": "默认: {{default}}",
+    "baseURL": "API 地址",
+    "baseURLHint": "可选。留空则使用 Google 默认端点。",
     "enabled": "启用 Gemini",
     "enabledHint": "在提示词输出中显示生成图像按钮",
     "testConnection": "测试连接",

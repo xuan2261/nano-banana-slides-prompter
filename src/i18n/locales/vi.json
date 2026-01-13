@@ -402,6 +402,8 @@
     "apiKeyHint": "Lấy key từ Google AI Studio",
     "model": "Mô Hình",
     "modelHint": "Mặc định: {{default}}",
+    "baseURL": "URL API Cơ Sở",
+    "baseURLHint": "Tùy chọn. Để trống để sử dụng endpoint mặc định của Google.",
     "enabled": "Bật Gemini",
     "enabledHint": "Hiển thị nút Tạo Hình Ảnh trong kết quả prompt",
     "testConnection": "Kiểm Tra Kết Nối",

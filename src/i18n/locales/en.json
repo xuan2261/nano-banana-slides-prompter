@@ -405,6 +405,8 @@
     "apiKeyHint": "Get your key from Google AI Studio",
     "model": "Model",
     "modelHint": "Default: {{default}}",
+    "baseURL": "API Base URL",
+    "baseURLHint": "Optional. Leave empty to use Google's default endpoint.",
     "enabled": "Enable Gemini",
     "enabledHint": "Show Generate Image button in prompt output",
     "testConnection": "Test Connection",

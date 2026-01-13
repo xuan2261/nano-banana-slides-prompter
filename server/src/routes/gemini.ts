@@ -55,6 +55,7 @@ const generateImageSchema = z.object({
   prompt: z.string().min(1, 'Prompt is required'),
   apiKey: z.string().optional(),
   model: z.string().optional(),
+  baseURL: z.string().url().optional(),
 });
 
 // Schema for batch image generation
@@ -62,11 +63,13 @@ const generateImagesSchema = z.object({
   prompts: z.array(z.string().min(1)).min(1).max(10, 'Maximum 10 prompts allowed'),
   apiKey: z.string().optional(),
   model: z.string().optional(),
+  baseURL: z.string().url().optional(),
 });
 
 // Schema for connection test
 const testConnectionSchema = z.object({
   apiKey: z.string().min(1, 'API key is required'),
+  baseURL: z.string().url().optional(),
 });
 
 /**
@@ -78,7 +81,7 @@ geminiRouter.post(
   rateLimitMiddleware,
   zValidator('json', generateImageSchema),
   async (c) => {
-    const { prompt, apiKey: clientApiKey, model } = c.req.valid('json');
+    const { prompt, apiKey: clientApiKey, model, baseURL } = c.req.valid('json');
     const apiKey = getEffectiveApiKey(clientApiKey);
 
     if (!apiKey) {
@@ -91,7 +94,7 @@ geminiRouter.post(
       );
     }
 
-    const result = await generateSlideImage(prompt, { apiKey, model });
+    const result = await generateSlideImage(prompt, { apiKey, model, baseURL });
 
     if (!result.success) {
       return c.json({ success: false, error: result.error }, 400);
@@ -113,7 +116,7 @@ geminiRouter.post(
   rateLimitMiddleware,
   zValidator('json', generateImagesSchema),
   async (c) => {
-    const { prompts, apiKey: clientApiKey, model } = c.req.valid('json');
+    const { prompts, apiKey: clientApiKey, model, baseURL } = c.req.valid('json');
     const apiKey = getEffectiveApiKey(clientApiKey);
 
     if (!apiKey) {
@@ -129,6 +132,7 @@ geminiRouter.post(
     const { results, totalSuccess, totalFailed } = await generateSlideImages(prompts, {
       apiKey,
       model,
+      baseURL,
     });
 
     return c.json({
@@ -148,9 +152,9 @@ geminiRouter.post(
  * Test Gemini API connection with provided key
  */
 geminiRouter.post('/test-connection', zValidator('json', testConnectionSchema), async (c) => {
-  const { apiKey } = c.req.valid('json');
+  const { apiKey, baseURL } = c.req.valid('json');
 
-  const result = await testGeminiConnection({ apiKey });
+  const result = await testGeminiConnection({ apiKey, baseURL });
 
   if (!result.success) {
     return c.json({ success: false, error: result.error }, 400);
