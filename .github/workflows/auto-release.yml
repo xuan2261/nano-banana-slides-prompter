@@ -42,6 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: write
 
     steps:
       - name: Checkout
@@ -81,3 +82,10 @@ jobs:
           git push origin "v${{ needs.check-version.outputs.version }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger Electron Build
+        run: |
+          gh workflow run "Build Electron App" --ref "v${{ needs.check-version.outputs.version }}"
+          echo "Triggered Electron Build for v${{ needs.check-version.outputs.version }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
