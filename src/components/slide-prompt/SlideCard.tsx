@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChevronDown, ChevronRight, Check, Copy, Sparkles, Loader2 } from 'lucide-react';
+import { ChevronDown, ChevronRight, Check, Copy, Sparkles, Loader2, Pencil, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useToast } from '@/hooks/use-toast';
 import { usePromptOptimizer } from '@/hooks/usePromptOptimizer';
@@ -25,10 +26,19 @@ export function SlideCard({
 }: SlideCardProps) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(defaultOpen);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedPrompt, setEditedPrompt] = useState(slide.prompt);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     setIsOpen(defaultOpen);
   }, [defaultOpen]);
+
+  // Sync editedPrompt with slide.prompt when slide changes
+  useEffect(() => {
+    setEditedPrompt(slide.prompt);
+  }, [slide.prompt]);
+
   const [copied, setCopied] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(!isNew);
   const [showOptimizationDiff, setShowOptimizationDiff] = useState(false);
@@ -87,6 +97,32 @@ export function SlideCard({
     reset();
   };
 
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsEditing(true);
+    setIsOpen(true);
+    // Focus textarea after render
+    setTimeout(() => textareaRef.current?.focus(), 100);
+  };
+
+  const handleSaveEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onPromptUpdate && editedPrompt.trim() !== slide.prompt) {
+      onPromptUpdate(slide.slideNumber, editedPrompt.trim());
+      toast({
+        title: t('slideCard.editSaved', 'Saved'),
+        description: t('slideCard.editSavedDesc', 'Prompt updated successfully'),
+      });
+    }
+    setIsEditing(false);
+  };
+
+  const handleCancelEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditedPrompt(slide.prompt);
+    setIsEditing(false);
+  };
+
   return (
     <Collapsible
       open={isOpen}
@@ -110,12 +146,24 @@ export function SlideCard({
             </div>
           </div>
           <div className="flex items-center gap-1">
+            {/* Edit button - only show when onPromptUpdate is provided */}
+            {onPromptUpdate && !isEditing && (
+              <Button
+                onClick={handleEdit}
+                variant="ghost"
+                size="sm"
+                className="h-8 px-3 opacity-70 hover:opacity-100 transition-opacity"
+              >
+                <Pencil className="h-3.5 w-3.5 mr-1.5 text-blue-500" />
+                <span className="text-xs">{t('buttons.edit', 'Edit')}</span>
+              </Button>
+            )}
             <Button
               onClick={handleOptimize}
               variant="ghost"
               size="sm"
               className="h-8 px-3 opacity-70 hover:opacity-100 transition-opacity"
-              disabled={isOptimizing}
+              disabled={isOptimizing || isEditing}
             >
               {isOptimizing ? (
                 <>
@@ -152,11 +200,33 @@ export function SlideCard({
       </CollapsibleTrigger>
       <CollapsibleContent>
         <div className="px-4 pb-4">
-          <div className="bg-gradient-to-br from-muted/50 to-muted/30 rounded-lg p-4 border border-border/30">
-            <pre className="text-sm text-foreground whitespace-pre-wrap font-mono leading-relaxed">
-              {slide.prompt}
-            </pre>
-          </div>
+          {isEditing ? (
+            <div className="space-y-3">
+              <Textarea
+                ref={textareaRef}
+                value={editedPrompt}
+                onChange={(e) => setEditedPrompt(e.target.value)}
+                className="min-h-[200px] font-mono text-sm resize-y"
+                placeholder={t('slideCard.editPlaceholder', 'Enter your prompt...')}
+              />
+              <div className="flex justify-end gap-2">
+                <Button onClick={handleCancelEdit} variant="outline" size="sm" className="h-8">
+                  <X className="h-3.5 w-3.5 mr-1.5" />
+                  {t('buttons.cancel', 'Cancel')}
+                </Button>
+                <Button onClick={handleSaveEdit} variant="default" size="sm" className="h-8">
+                  <Check className="h-3.5 w-3.5 mr-1.5" />
+                  {t('buttons.save', 'Save')}
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-gradient-to-br from-muted/50 to-muted/30 rounded-lg p-4 border border-border/30">
+              <pre className="text-sm text-foreground whitespace-pre-wrap font-mono leading-relaxed">
+                {slide.prompt}
+              </pre>
+            </div>
+          )}
         </div>
       </CollapsibleContent>
 

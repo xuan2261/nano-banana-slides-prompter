@@ -23,7 +23,9 @@
     "extracting": "Đang trích xuất...",
     "expandAll": "Mở rộng tất cả",
     "collapseAll": "Thu gọn tất cả",
-    "export": "Xuất"
+    "export": "Xuất",
+    "edit": "Sửa",
+    "save": "Lưu"
   },
   "contentInput": {
     "tabs": {
@@ -172,7 +174,10 @@
     "rawHint": "Đầu ra LLM thô để gỡ lỗi hoặc xử lý tùy chỉnh."
   },
   "slideCard": {
-    "copiedSlide": "Prompt slide {{number}} đã được sao chép vào clipboard."
+    "copiedSlide": "Prompt slide {{number}} đã được sao chép vào clipboard.",
+    "editSaved": "Đã lưu",
+    "editSavedDesc": "Prompt đã được cập nhật thành công",
+    "editPlaceholder": "Nhập prompt của bạn..."
   },
   "settings": {
     "title": "Cài Đặt AI",

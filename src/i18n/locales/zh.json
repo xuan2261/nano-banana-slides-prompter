@@ -23,7 +23,9 @@
     "extracting": "提取中...",
     "expandAll": "全部展开",
     "collapseAll": "全部折叠",
-    "export": "导出"
+    "export": "导出",
+    "edit": "编辑",
+    "save": "保存"
   },
   "contentInput": {
     "tabs": {
@@ -172,7 +174,10 @@
     "rawHint": "用于调试或自定义处理的原始 LLM 输出。"
   },
   "slideCard": {
-    "copiedSlide": "第 {{number}} 张幻灯片提示词已复制到剪贴板。"
+    "copiedSlide": "第 {{number}} 张幻灯片提示词已复制到剪贴板。",
+    "editSaved": "已保存",
+    "editSavedDesc": "提示词已成功更新",
+    "editPlaceholder": "输入您的提示词..."
   },
   "language": {
     "label": "语言",

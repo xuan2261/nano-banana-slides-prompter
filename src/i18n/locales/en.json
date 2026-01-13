@@ -23,7 +23,9 @@
     "extracting": "Extracting...",
     "expandAll": "Expand All",
     "collapseAll": "Collapse All",
-    "export": "Export"
+    "export": "Export",
+    "edit": "Edit",
+    "save": "Save"
   },
   "contentInput": {
     "tabs": {
@@ -175,7 +177,10 @@
     "rawHint": "Raw LLM output for debugging or custom processing."
   },
   "slideCard": {
-    "copiedSlide": "Slide {{number}} prompt copied to clipboard."
+    "copiedSlide": "Slide {{number}} prompt copied to clipboard.",
+    "editSaved": "Saved",
+    "editSavedDesc": "Prompt updated successfully",
+    "editPlaceholder": "Enter your prompt..."
   },
   "settings": {
     "title": "AI Settings",

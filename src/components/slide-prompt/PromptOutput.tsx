@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Check,
@@ -24,6 +24,7 @@ interface PromptOutputProps {
   isStreaming?: boolean;
   streamingSlides?: ParsedSlide[];
   expectedSlideCount?: number;
+  onSlidesUpdate?: (slides: ParsedSlide[]) => void;
 }
 
 function SlideSkeleton() {
@@ -48,6 +49,7 @@ export function PromptOutput({
   isStreaming = false,
   streamingSlides = [],
   expectedSlideCount = 10,
+  onSlidesUpdate,
 }: PromptOutputProps) {
   const { t } = useTranslation();
   const [format, setFormat] = useState<OutputFormat>('text');
@@ -58,11 +60,28 @@ export function PromptOutput({
 
   const { isGenerating, images, generateImages, isEnabled: geminiEnabled } = useGeminiImage();
 
-  const displaySlides = isStreaming ? streamingSlides : prompt?.slides || [];
+  // Memoize displaySlides to prevent dependency changes on every render
+  const displaySlides = useMemo(
+    () => (isStreaming ? streamingSlides : prompt?.slides || []),
+    [isStreaming, streamingSlides, prompt?.slides]
+  );
   const hasSlides = displaySlides.length > 0;
   const remainingSkeletons = isStreaming
     ? Math.max(0, Math.min(3, expectedSlideCount - streamingSlides.length))
     : 0;
+
+  // Handle prompt update from SlideCard edit - must be before early return
+  const handlePromptUpdate = useCallback(
+    (slideNumber: number, newPrompt: string) => {
+      if (!onSlidesUpdate || !displaySlides.length) return;
+
+      const updatedSlides = displaySlides.map((slide) =>
+        slide.slideNumber === slideNumber ? { ...slide, prompt: newPrompt } : slide
+      );
+      onSlidesUpdate(updatedSlides);
+    },
+    [displaySlides, onSlidesUpdate]
+  );
 
   if (!prompt && !isStreaming) {
     return (
@@ -236,6 +255,7 @@ export function PromptOutput({
                       defaultOpen={allExpanded}
                       isNew={false}
                       animationDelay={index * 50}
+                      onPromptUpdate={onSlidesUpdate ? handlePromptUpdate : undefined}
                     />
                   ))}
                   {Array.from({ length: remainingSkeletons }).map((_, i) => (

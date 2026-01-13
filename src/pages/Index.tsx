@@ -100,7 +100,7 @@ export default function Index() {
     }
   };
 
-  const { isGenerating, slides, error, generatedPrompt, generate, cancel } =
+  const { isGenerating, slides, error, generatedPrompt, generate, cancel, updateSlides } =
     useStreamingGeneration();
 
   const handleGenerate = async () => {
@@ -311,6 +311,7 @@ export default function Index() {
                 isStreaming={isGenerating}
                 streamingSlides={slides}
                 expectedSlideCount={settings.slideCount}
+                onSlidesUpdate={updateSlides}
               />
             </div>
           </div>

@@ -14,6 +14,7 @@ export interface UseStreamingGenerationReturn extends UseStreamingGenerationStat
   generate: (request: GeneratePromptRequest) => Promise<void>;
   cancel: (sessionId?: string) => void;
   reset: () => void;
+  updateSlides: (slides: ParsedSlide[]) => void;
 }
 
 export function useStreamingGeneration(): UseStreamingGenerationReturn {
@@ -201,6 +202,38 @@ export function useStreamingGeneration(): UseStreamingGenerationReturn {
     ]
   );
 
+  // Update slides after editing (also updates generatedPrompt)
+  const updateSlides = useCallback(
+    (newSlides: ParsedSlide[]) => {
+      if (!currentSessionId) return;
+
+      // Update local state
+      setLocalSlides(newSlides);
+
+      // Rebuild generatedPrompt with updated slides
+      const plainText = newSlides
+        .map((s) => `**Slide ${s.slideNumber}: ${s.title}**\n\`\`\`\n${s.prompt}\n\`\`\``)
+        .join('\n\n');
+      const updatedPrompt: GeneratedPrompt = {
+        plainText,
+        slides: newSlides,
+        jsonFormat: {
+          model: 'nano-banana-pro',
+          messages: [
+            { role: 'system', content: 'Nano Banana Pro optimized prompts' },
+            { role: 'user', content: plainText },
+          ],
+        },
+      };
+      setLocalPrompt(updatedPrompt);
+
+      // Persist to session store
+      updateSessionSlides(currentSessionId, newSlides);
+      updateSessionPrompt(currentSessionId, updatedPrompt);
+    },
+    [currentSessionId, updateSessionSlides, updateSessionPrompt]
+  );
+
   return {
     isGenerating: localIsGenerating,
     slides: localSlides,
@@ -209,5 +242,6 @@ export function useStreamingGeneration(): UseStreamingGenerationReturn {
     generate,
     cancel,
     reset,
+    updateSlides,
   };
 }
