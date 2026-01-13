@@ -22,7 +22,8 @@
     "extract": "Extract",
     "extracting": "Extracting...",
     "expandAll": "Expand All",
-    "collapseAll": "Collapse All"
+    "collapseAll": "Collapse All",
+    "export": "Export"
   },
   "contentInput": {
     "tabs": {

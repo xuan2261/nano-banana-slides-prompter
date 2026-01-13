@@ -22,7 +22,8 @@
     "extract": "提取",
     "extracting": "提取中...",
     "expandAll": "全部展开",
-    "collapseAll": "全部折叠"
+    "collapseAll": "全部折叠",
+    "export": "导出"
   },
   "contentInput": {
     "tabs": {

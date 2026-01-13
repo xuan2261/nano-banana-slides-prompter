@@ -22,7 +22,8 @@
     "extract": "Trích xuất",
     "extracting": "Đang trích xuất...",
     "expandAll": "Mở rộng tất cả",
-    "collapseAll": "Thu gọn tất cả"
+    "collapseAll": "Thu gọn tất cả",
+    "export": "Xuất"
   },
   "contentInput": {
     "tabs": {

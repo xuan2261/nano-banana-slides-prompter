@@ -301,16 +301,6 @@ describe('sessionStore', () => {
     });
   });
 
-  describe('setShowPromptPreview', () => {
-    it('should toggle showPromptPreview state', () => {
-      expect(useSessionStore.getState().showPromptPreview).toBe(true);
-
-      useSessionStore.getState().setShowPromptPreview(false);
-
-      expect(useSessionStore.getState().showPromptPreview).toBe(false);
-    });
-  });
-
   describe('loadSessions', () => {
     it('should load sessions from API successfully', async () => {
       const mockSessions = [
@@ -321,9 +311,22 @@ describe('sessionStore', () => {
           createdAt: Date.now(),
           updatedAt: Date.now(),
           config: {
-            content: { type: 'text', text: '', topic: '', fileContent: '', fileName: '', url: '', urlContent: '' },
+            content: {
+              type: 'text',
+              text: '',
+              topic: '',
+              fileContent: '',
+              fileName: '',
+              url: '',
+              urlContent: '',
+            },
             style: 'professional',
-            settings: { aspectRatio: '16:9', slideCount: 5, colorPalette: 'auto', layoutStructure: 'balanced' },
+            settings: {
+              aspectRatio: '16:9',
+              slideCount: 5,
+              colorPalette: 'auto',
+              layoutStructure: 'balanced',
+            },
           },
           status: 'idle',
           slides: [],
@@ -372,9 +375,22 @@ describe('sessionStore', () => {
           createdAt: Date.now(),
           updatedAt: Date.now(),
           config: {
-            content: { type: 'text', text: '', topic: '', fileContent: '', fileName: '', url: '', urlContent: '' },
+            content: {
+              type: 'text',
+              text: '',
+              topic: '',
+              fileContent: '',
+              fileName: '',
+              url: '',
+              urlContent: '',
+            },
             style: 'professional',
-            settings: { aspectRatio: '16:9', slideCount: 5, colorPalette: 'auto', layoutStructure: 'balanced' },
+            settings: {
+              aspectRatio: '16:9',
+              slideCount: 5,
+              colorPalette: 'auto',
+              layoutStructure: 'balanced',
+            },
           },
           status: 'idle',
           slides: [],
@@ -403,9 +419,22 @@ describe('sessionStore', () => {
           createdAt: Date.now(),
           updatedAt: Date.now(),
           config: {
-            content: { type: 'text', text: '', topic: '', fileContent: '', fileName: '', url: '', urlContent: '' },
+            content: {
+              type: 'text',
+              text: '',
+              topic: '',
+              fileContent: '',
+              fileName: '',
+              url: '',
+              urlContent: '',
+            },
             style: 'professional',
-            settings: { aspectRatio: '16:9', slideCount: 5, colorPalette: 'auto', layoutStructure: 'balanced' },
+            settings: {
+              aspectRatio: '16:9',
+              slideCount: 5,
+              colorPalette: 'auto',
+              layoutStructure: 'balanced',
+            },
           },
           status: 'idle',
           slides: [],
@@ -437,9 +466,22 @@ describe('sessionStore', () => {
         createdAt: Date.now(),
         updatedAt: Date.now(),
         config: {
-          content: { type: 'text', text: '', topic: '', fileContent: '', fileName: '', url: '', urlContent: '' },
+          content: {
+            type: 'text',
+            text: '',
+            topic: '',
+            fileContent: '',
+            fileName: '',
+            url: '',
+            urlContent: '',
+          },
           style: 'professional',
-          settings: { aspectRatio: '16:9', slideCount: 5, colorPalette: 'auto', layoutStructure: 'balanced' },
+          settings: {
+            aspectRatio: '16:9',
+            slideCount: 5,
+            colorPalette: 'auto',
+            layoutStructure: 'balanced',
+          },
         },
         status: 'idle',
         slides: [],

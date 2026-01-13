@@ -9,7 +9,6 @@ import { StyleSelector } from '@/components/slide-prompt/StyleSelector';
 import { CharacterSelector } from '@/components/slide-prompt/CharacterSelector';
 import { PresentationSettings } from '@/components/slide-prompt/PresentationSettings';
 import { PromptOutput } from '@/components/slide-prompt/PromptOutput';
-import { PromptPreview } from '@/components/PromptPreview';
 import { SessionSidebar } from '@/components/SessionSidebar';
 import { SettingsDialog } from '@/components/SettingsDialog';
 import { useStreamingGeneration } from '@/hooks/useStreamingGeneration';
@@ -53,8 +52,6 @@ export default function Index() {
     loadSessions,
     isLoading,
     syncToServer,
-    showPromptPreview,
-    setShowPromptPreview,
   } = useSessionStore();
 
   const currentSession = getCurrentSession();
@@ -300,15 +297,6 @@ export default function Index() {
                 streamingSlides={slides}
                 expectedSlideCount={settings.slideCount}
               />
-              {generatedPrompt && !isGenerating && (
-                <div className="mt-4">
-                  <PromptPreview
-                    prompt={generatedPrompt}
-                    isOpen={showPromptPreview}
-                    onOpenChange={setShowPromptPreview}
-                  />
-                </div>
-              )}
             </div>
           </div>
         </main>

@@ -1,10 +1,26 @@
-import { useState, useRef, useMemo } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, Copy, FileText, Code, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
+import {
+  Check,
+  Copy,
+  FileText,
+  Code,
+  ChevronDown,
+  ChevronUp,
+  Loader2,
+  Download,
+} from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
+import { useExport } from '@/hooks/useExport';
 import { SlideCard } from './SlideCard';
 import type { GeneratedPrompt, OutputFormat, ParsedSlide } from '@/types/slidePrompt';
 
@@ -43,41 +59,7 @@ export function PromptOutput({
   const [copied, setCopied] = useState(false);
   const [allExpanded, setAllExpanded] = useState(true);
   const { toast } = useToast();
-
-  const seenSlidesRef = useRef<Set<number>>(new Set());
-  const prevStreamingRef = useRef(false);
-  const prevSlidesLengthRef = useRef(0);
-
-  // Compute new slides using useMemo instead of useEffect + setState
-  const newSlides = useMemo(() => {
-    // Reset when streaming starts fresh
-    if (isStreaming && streamingSlides.length === 0) {
-      seenSlidesRef.current = new Set();
-      return new Set<number>();
-    }
-
-    // Reset when streaming ends
-    if (!isStreaming && prevStreamingRef.current && prompt) {
-      seenSlidesRef.current = new Set(prompt.slides.map((s) => s.slideNumber));
-      prevStreamingRef.current = false;
-      return new Set<number>();
-    }
-
-    // Track new slides during streaming
-    if (isStreaming) {
-      prevStreamingRef.current = true;
-      const currentNew = new Set<number>();
-      streamingSlides.forEach((slide) => {
-        if (!seenSlidesRef.current.has(slide.slideNumber)) {
-          currentNew.add(slide.slideNumber);
-          seenSlidesRef.current.add(slide.slideNumber);
-        }
-      });
-      return currentNew;
-    }
-
-    return new Set<number>();
-  }, [isStreaming, streamingSlides, prompt]);
+  const { exportCurrentSession } = useExport();
 
   const displaySlides = isStreaming ? streamingSlides : prompt?.slides || [];
   const hasSlides = displaySlides.length > 0;
@@ -205,7 +187,7 @@ export function PromptOutput({
                     key={slide.slideNumber}
                     slide={slide}
                     defaultOpen={allExpanded}
-                    isNew={newSlides.has(slide.slideNumber)}
+                    isNew={false}
                     animationDelay={index * 50}
                   />
                 ))}

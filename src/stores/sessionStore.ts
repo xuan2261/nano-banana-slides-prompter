@@ -48,7 +48,6 @@ interface SessionStore {
   isLoading: boolean;
   syncTimeoutId: ReturnType<typeof setTimeout> | null;
   syncInFlight: boolean;
-  showPromptPreview: boolean;
 
   loadSessions: () => Promise<void>;
   getCurrentSession: () => Session | null;
@@ -62,7 +61,6 @@ interface SessionStore {
   updateSessionError: (id: string, error: string | null) => void;
   updateSessionTitle: (id: string, title: string) => void;
   syncToServer: () => Promise<void>;
-  setShowPromptPreview: (show: boolean) => void;
 
   getAbortController: (id: string) => AbortController | undefined;
   setAbortController: (id: string, controller: AbortController) => void;
@@ -76,7 +74,6 @@ export const useSessionStore = create<SessionStore>()((set, get) => ({
   isLoading: true,
   syncTimeoutId: null,
   syncInFlight: false,
-  showPromptPreview: true,
 
   loadSessions: async () => {
     try {
@@ -284,9 +281,5 @@ export const useSessionStore = create<SessionStore>()((set, get) => ({
       abortControllers.delete(id);
       return { abortControllers };
     });
-  },
-
-  setShowPromptPreview: (show) => {
-    set({ showPromptPreview: show });
   },
 }));
