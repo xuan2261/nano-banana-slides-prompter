@@ -1,3 +1,6 @@
+// DOM polyfills must be imported first (before pdfjs-dist loads)
+import './polyfills/dom-matrix-polyfill';
+
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';

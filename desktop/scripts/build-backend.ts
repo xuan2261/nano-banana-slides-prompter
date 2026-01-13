@@ -30,16 +30,16 @@ function buildBackend(): void {
   const currentPlatform = process.platform;
   const currentArch = process.arch;
 
-  let targetPlatform: typeof PLATFORMS[0] | undefined;
+  let targetPlatform: (typeof PLATFORMS)[0] | undefined;
 
   if (currentPlatform === 'win32') {
-    targetPlatform = PLATFORMS.find(p => p.target === 'bun-windows-x64');
+    targetPlatform = PLATFORMS.find((p) => p.target === 'bun-windows-x64');
   } else if (currentPlatform === 'darwin') {
-    targetPlatform = PLATFORMS.find(p =>
-      p.target === (currentArch === 'arm64' ? 'bun-darwin-arm64' : 'bun-darwin-x64')
+    targetPlatform = PLATFORMS.find(
+      (p) => p.target === (currentArch === 'arm64' ? 'bun-darwin-arm64' : 'bun-darwin-x64')
     );
   } else if (currentPlatform === 'linux') {
-    targetPlatform = PLATFORMS.find(p => p.target === 'bun-linux-x64');
+    targetPlatform = PLATFORMS.find((p) => p.target === 'bun-linux-x64');
   }
 
   if (!targetPlatform) {
@@ -56,8 +56,9 @@ function buildBackend(): void {
 
   try {
     // Build using bun build --compile
+    // Exclude native modules that can't be bundled (pdfjs-dist optional canvas dependency)
     execSync(
-      `bun build --compile --target=${targetPlatform.target} --outfile="${outputPath}" "${entryPoint}"`,
+      `bun build --compile --target=${targetPlatform.target} --outfile="${outputPath}" --external @napi-rs/canvas "${entryPoint}"`,
       {
         cwd: SERVER_DIR,
         stdio: 'inherit',
