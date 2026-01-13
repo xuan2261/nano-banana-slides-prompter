@@ -55,5 +55,5 @@ nsis:
 
 publish:
   provider: github
-  owner: nomie7
+  owner: xuan2261
   repo: nano-banana-slides-prompter

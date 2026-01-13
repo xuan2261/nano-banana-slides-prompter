@@ -53,17 +53,38 @@ app.onError((err, c) => {
 });
 
 const requestedPort = Number(process.env.PORT) || 3001;
-console.log(`Starting server on port ${requestedPort}...`);
 
-// Use Bun.serve explicitly to get actual bound port (critical for PORT=0 dynamic allocation)
-const server = Bun.serve({
-  port: requestedPort,
-  fetch: app.fetch,
-  idleTimeout: 255,
-});
+// Try port binding with retry logic for production reliability
+const MAX_PORT_RETRIES = 5;
+let server: ReturnType<typeof Bun.serve> | null = null;
+let boundPort = requestedPort;
 
-// Output ACTUAL bound port for Electron IPC detection (after server starts)
-console.log(`PORT:${server.port}`);
-console.log(`Server running at http://localhost:${server.port}`);
+for (let attempt = 0; attempt < MAX_PORT_RETRIES; attempt++) {
+  const tryPort = requestedPort === 0 ? 0 : requestedPort + attempt;
+  try {
+    server = Bun.serve({
+      port: tryPort,
+      fetch: app.fetch,
+      idleTimeout: 255,
+    });
+    boundPort = server.port;
+    break; // Success - exit retry loop
+  } catch (err: unknown) {
+    const error = err as { code?: string };
+    if (error.code === 'EADDRINUSE' && attempt < MAX_PORT_RETRIES - 1) {
+      console.warn(`Port ${tryPort} in use, trying ${tryPort + 1}...`);
+      continue;
+    }
+    throw err; // Re-throw if not EADDRINUSE or max retries reached
+  }
+}
+
+if (!server) {
+  throw new Error(`Failed to bind server after ${MAX_PORT_RETRIES} attempts`);
+}
+
+// Output ACTUAL bound port for Electron IPC detection (AFTER successful bind)
+console.log(`PORT:${boundPort}`);
+console.log(`Server running at http://localhost:${boundPort}`);
 
 export default server;
