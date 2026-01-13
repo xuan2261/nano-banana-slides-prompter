@@ -79,13 +79,15 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag -a "v${{ needs.check-version.outputs.version }}" -m "Release v${{ needs.check-version.outputs.version }}"
-          git push origin "v${{ needs.check-version.outputs.version }}"
+          # Push to current repo (works for both origin and forks)
+          git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" "v${{ needs.check-version.outputs.version }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Trigger Electron Build
         run: |
-          gh workflow run "Build Electron App" --ref "v${{ needs.check-version.outputs.version }}"
-          echo "Triggered Electron Build for v${{ needs.check-version.outputs.version }}"
+          # Trigger workflow on current repo (works for forks)
+          gh workflow run "Build Electron App" --repo "${{ github.repository }}" --ref "v${{ needs.check-version.outputs.version }}"
+          echo "Triggered Electron Build for v${{ needs.check-version.outputs.version }} on ${{ github.repository }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
