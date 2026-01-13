@@ -217,7 +217,13 @@
     "copyFailedHint": "Please select and copy the text manually.",
     "copiedAll": "Copied All!",
     "copiedAllDesc": "All {{count}} slide prompts copied to clipboard.",
-    "copiedSlide": "Copied!"
+    "copiedSlide": "Copied!",
+    "importSuccess": "File Imported",
+    "importSuccessDesc": "Extracted {{count}} characters from file",
+    "importFailed": "Import Failed",
+    "importFailedDefault": "Could not extract text from file",
+    "fileTooLarge": "File Too Large",
+    "fileTooLargeDesc": "Maximum file size is 10MB"
   },
   "errors": {
     "loadSessionsTitle": "Failed to load sessions",
@@ -237,6 +243,8 @@
     "asJSON": "Export as JSON",
     "asMarkdown": "Export as Markdown",
     "asText": "Export as Text",
+    "asPPTX": "Export as PPTX",
+    "asPDF": "Export as PDF",
     "noSession": "No Session",
     "noSessionDesc": "Please select a session to export.",
     "noContent": "No Content",
@@ -353,5 +361,22 @@
         "description": "Art gallery and exhibition showcase"
       }
     }
+  },
+  "batch": {
+    "panelTitle": "Batch Processing",
+    "processing": "Processing...",
+    "inputLabel": "Enter topics (one per line)",
+    "inputPlaceholder": "Topic 1\nTopic 2\nTopic 3",
+    "addTopics": "Add Topics",
+    "start": "Start Batch",
+    "cancel": "Cancel",
+    "reset": "Reset",
+    "progress": "{{completed}}/{{total}} completed",
+    "jobPending": "Pending",
+    "jobProcessing": "Processing",
+    "jobCompleted": "Completed",
+    "jobFailed": "Failed",
+    "maxTopics": "Maximum {{max}} topics allowed",
+    "noTopics": "No topics added yet"
   }
 }

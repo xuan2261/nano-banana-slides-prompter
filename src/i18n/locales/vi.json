@@ -214,7 +214,13 @@
     "copyFailedHint": "Vui lòng chọn và sao chép văn bản thủ công.",
     "copiedAll": "Đã Sao Chép Tất Cả!",
     "copiedAllDesc": "Đã sao chép {{count}} prompt slide vào clipboard.",
-    "copiedSlide": "Đã Sao Chép!"
+    "copiedSlide": "Đã Sao Chép!",
+    "importSuccess": "Đã Nhập Tệp",
+    "importSuccessDesc": "Đã trích xuất {{count}} ký tự từ tệp",
+    "importFailed": "Nhập Thất Bại",
+    "importFailedDefault": "Không thể trích xuất văn bản từ tệp",
+    "fileTooLarge": "Tệp Quá Lớn",
+    "fileTooLargeDesc": "Kích thước tệp tối đa là 10MB"
   },
   "errors": {
     "loadSessionsTitle": "Không thể tải các phiên",
@@ -234,6 +240,8 @@
     "asJSON": "Xuất dạng JSON",
     "asMarkdown": "Xuất dạng Markdown",
     "asText": "Xuất dạng Text",
+    "asPPTX": "Xuất dạng PPTX",
+    "asPDF": "Xuất dạng PDF",
     "noSession": "Không Có Phiên",
     "noSessionDesc": "Vui lòng chọn một phiên để xuất.",
     "noContent": "Không Có Nội Dung",
@@ -350,5 +358,22 @@
         "description": "Trưng bày phòng trưng bày và triển lãm nghệ thuật"
       }
     }
+  },
+  "batch": {
+    "panelTitle": "Xử Lý Hàng Loạt",
+    "processing": "Đang xử lý...",
+    "inputLabel": "Nhập chủ đề (mỗi dòng một chủ đề)",
+    "inputPlaceholder": "Chủ đề 1\nChủ đề 2\nChủ đề 3",
+    "addTopics": "Thêm Chủ Đề",
+    "start": "Bắt Đầu",
+    "cancel": "Hủy",
+    "reset": "Đặt Lại",
+    "progress": "{{completed}}/{{total}} hoàn thành",
+    "jobPending": "Chờ xử lý",
+    "jobProcessing": "Đang xử lý",
+    "jobCompleted": "Hoàn thành",
+    "jobFailed": "Thất bại",
+    "maxTopics": "Tối đa {{max}} chủ đề",
+    "noTopics": "Chưa có chủ đề nào"
   }
 }

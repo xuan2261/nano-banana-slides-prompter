@@ -62,17 +62,20 @@ export function SessionSidebar({ isOpen }: SessionSidebarProps) {
     }
   };
 
-  const formatTime = useCallback((timestamp: number): string => {
-    const now = Date.now();
-    const diffMins = Math.floor((now - timestamp) / 60000);
-    if (diffMins < 1) return t('sidebar.time.justNow');
-    if (diffMins < 60) return t('sidebar.time.minutesAgo', { count: diffMins });
-    const diffHours = Math.floor(diffMins / 60);
-    if (diffHours < 24) return t('sidebar.time.hoursAgo', { count: diffHours });
-    const diffDays = Math.floor(diffHours / 24);
-    if (diffDays < 7) return t('sidebar.time.daysAgo', { count: diffDays });
-    return new Date(timestamp).toLocaleDateString();
-  }, [t]);
+  const formatTime = useCallback(
+    (timestamp: number): string => {
+      const now = Date.now();
+      const diffMins = Math.floor((now - timestamp) / 60000);
+      if (diffMins < 1) return t('sidebar.time.justNow');
+      if (diffMins < 60) return t('sidebar.time.minutesAgo', { count: diffMins });
+      const diffHours = Math.floor(diffMins / 60);
+      if (diffHours < 24) return t('sidebar.time.hoursAgo', { count: diffHours });
+      const diffDays = Math.floor(diffHours / 24);
+      if (diffDays < 7) return t('sidebar.time.daysAgo', { count: diffDays });
+      return new Date(timestamp).toLocaleDateString();
+    },
+    [t]
+  );
 
   const stopProp = (e: React.MouseEvent | React.KeyboardEvent, fn: () => void) => {
     e.stopPropagation();
@@ -183,6 +186,12 @@ export function SessionSidebar({ isOpen }: SessionSidebarProps) {
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => exportSessionById(session.id, 'text')}>
                           {t('export.asText')}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => exportSessionById(session.id, 'pptx')}>
+                          {t('export.asPPTX', 'Export as PowerPoint')}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => exportSessionById(session.id, 'pdf')}>
+                          {t('export.asPDF', 'Export as PDF')}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

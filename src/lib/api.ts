@@ -219,3 +219,53 @@ export async function extractUrl(url: string): Promise<ExtractUrlResponse> {
   }
   return response.json();
 }
+
+export interface ImportFileResponse {
+  success: boolean;
+  data?: {
+    text: string;
+    metadata?: { pages?: number; wordCount?: number };
+    fileName: string;
+  };
+  error?: string;
+}
+
+/**
+ * Import PDF file and extract text
+ */
+export async function importPdf(file: File): Promise<ImportFileResponse> {
+  const baseUrl = await getBaseUrl();
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await fetch(`${baseUrl}/api/import/pdf`, {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    return { success: false, error: error.error || `HTTP error: ${response.status}` };
+  }
+  return response.json();
+}
+
+/**
+ * Import DOCX file and extract text
+ */
+export async function importDocx(file: File): Promise<ImportFileResponse> {
+  const baseUrl = await getBaseUrl();
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await fetch(`${baseUrl}/api/import/docx`, {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    return { success: false, error: error.error || `HTTP error: ${response.status}` };
+  }
+  return response.json();
+}

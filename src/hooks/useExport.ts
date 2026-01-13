@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@/hooks/use-toast';
 import { useSessionStore } from '@/stores/sessionStore';
@@ -8,9 +8,10 @@ export function useExport() {
   const { t } = useTranslation();
   const { toast } = useToast();
   const getCurrentSession = useSessionStore((state) => state.getCurrentSession);
+  const [isExporting, setIsExporting] = useState(false);
 
   const exportCurrentSession = useCallback(
-    (format: ExportFormat) => {
+    async (format: ExportFormat) => {
       const session = getCurrentSession();
       if (!session) {
         toast({
@@ -32,25 +33,30 @@ export function useExport() {
         return;
       }
 
+      setIsExporting(true);
       try {
-        exportSession(session, format);
+        await exportSession(session, format);
         toast({
           title: t('export.success'),
           description: t('export.successDesc', { format: format.toUpperCase() }),
         });
       } catch (error) {
+        // Fix: ERROR - Add error logging for debugging
+        console.error('Export failed:', error);
         toast({
           title: t('export.failed'),
           description: t('export.failedDesc'),
           variant: 'destructive',
         });
+      } finally {
+        setIsExporting(false);
       }
     },
     [getCurrentSession, toast, t]
   );
 
   const exportSessionById = useCallback(
-    (sessionId: string, format: ExportFormat) => {
+    async (sessionId: string, format: ExportFormat) => {
       const sessions = useSessionStore.getState().sessions;
       const session = sessions.find((s) => s.id === sessionId);
 
@@ -74,18 +80,23 @@ export function useExport() {
         return;
       }
 
+      setIsExporting(true);
       try {
-        exportSession(session, format);
+        await exportSession(session, format);
         toast({
           title: t('export.success'),
           description: t('export.successDesc', { format: format.toUpperCase() }),
         });
       } catch (error) {
+        // Fix: ERROR - Add error logging for debugging
+        console.error('Export failed:', error);
         toast({
           title: t('export.failed'),
           description: t('export.failedDesc'),
           variant: 'destructive',
         });
+      } finally {
+        setIsExporting(false);
       }
     },
     [toast, t]
@@ -94,5 +105,6 @@ export function useExport() {
   return {
     exportCurrentSession,
     exportSessionById,
+    isExporting,
   };
 }

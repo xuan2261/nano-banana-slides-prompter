@@ -1,6 +1,8 @@
 import type { Session, ParsedSlide, GeneratedPrompt } from '@/types/slidePrompt';
+import { exportToPptx, exportToPdf } from './exporters';
+import { sanitizeFilename } from './utils/sanitize-filename';
 
-export type ExportFormat = 'json' | 'markdown' | 'text';
+export type ExportFormat = 'json' | 'markdown' | 'text' | 'pptx' | 'pdf';
 
 /**
  * Downloads a file with the given content and filename
@@ -15,18 +17,6 @@ export function downloadFile(content: string, filename: string, mimeType: string
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
-}
-
-/**
- * Generates a safe filename from session title
- */
-function sanitizeFilename(title: string): string {
-  return (
-    title
-      .replace(/[^a-zA-Z0-9\u4e00-\u9fff\s-]/g, '')
-      .replace(/\s+/g, '_')
-      .substring(0, 50) || 'session'
-  );
 }
 
 /**
@@ -94,7 +84,7 @@ export function exportText(session: Session): void {
 /**
  * Export session in specified format
  */
-export function exportSession(session: Session, format: ExportFormat): void {
+export async function exportSession(session: Session, format: ExportFormat): Promise<void> {
   switch (format) {
     case 'json':
       exportJSON(session);
@@ -104,6 +94,12 @@ export function exportSession(session: Session, format: ExportFormat): void {
       break;
     case 'text':
       exportText(session);
+      break;
+    case 'pptx':
+      await exportToPptx(session);
+      break;
+    case 'pdf':
+      await exportToPdf(session);
       break;
   }
 }

@@ -11,6 +11,7 @@ import { PresentationSettings } from '@/components/slide-prompt/PresentationSett
 import { PromptOutput } from '@/components/slide-prompt/PromptOutput';
 import { SessionSidebar } from '@/components/SessionSidebar';
 import { SettingsDialog } from '@/components/SettingsDialog';
+import { BatchPanel } from '@/components/batch';
 import { useStreamingGeneration } from '@/hooks/useStreamingGeneration';
 import { useSessionStore } from '@/stores/sessionStore';
 import { useSettingsStore } from '@/stores/settingsStore';
@@ -277,6 +278,14 @@ export default function Index() {
                   </>
                 )}
               </Button>
+
+              <section className="animate-fade-in mt-6" style={{ animationDelay: '250ms' }}>
+                <BatchPanel
+                  style={style}
+                  settings={settings}
+                  llmConfig={llmSettings || undefined}
+                />
+              </section>
             </div>
 
             <div
