@@ -1,8 +1,10 @@
 # Codebase Summary
 
+**Version:** 1.2.2 | **Last Updated:** 2026-01-13
+
 ## Overview
 
-The Nano Banana Slides Prompter is a full-stack application with a React frontend (~7,600 LOC), Hono backend (~2,500 LOC), and Electron desktop shell (~800 LOC). Total codebase is approximately 11,000 LOC.
+The Nano Banana Slides Prompter is a full-stack application with a React frontend (~9,000 LOC), Hono backend (~2,553 LOC), and Electron desktop shell (~1,094 LOC). Total codebase is approximately 13,000 LOC.
 
 ## Project Structure
 
@@ -17,7 +19,7 @@ nano-banana-slides-prompter/
 │   ├── hooks/              # Custom hooks (3 files)
 │   ├── lib/                # Utilities (3 files)
 │   ├── types/              # TypeScript types (1 file)
-│   └── i18n/               # Internationalization (3 files)
+│   └── i18n/               # Internationalization (4 files: index + 3 locales)
 ├── server/                 # Backend source
 │   └── src/
 │       ├── prompts/        # System prompts & types
@@ -44,32 +46,33 @@ nano-banana-slides-prompter/
 
 ### Entry Points
 
-| File | Purpose |
-|------|---------|
-| `src/main.tsx` | React DOM render, i18n initialization |
-| `src/App.tsx` | Router setup, providers (Query, Tooltip, Toast) |
+| File           | Purpose                                         |
+| -------------- | ----------------------------------------------- |
+| `src/main.tsx` | React DOM render, i18n initialization           |
+| `src/App.tsx`  | Router setup, providers (Query, Tooltip, Toast) |
 
 ### Pages
 
-| Page | Path | Description |
-|------|------|-------------|
-| `Index.tsx` | `/` | Main application with 5 sections |
-| `NotFound.tsx` | `*` | 404 error page |
+| Page           | Path | Description                      |
+| -------------- | ---- | -------------------------------- |
+| `Index.tsx`    | `/`  | Main application with 5 sections |
+| `NotFound.tsx` | `*`  | 404 error page                   |
 
 ### Domain Components (`src/components/slide-prompt/`)
 
-| Component | Purpose |
-|-----------|---------|
-| `ContentInput.tsx` | Text/URL/CSV content input |
-| `StyleSelector.tsx` | Visual style selection (20 styles) |
-| `CharacterSelector.tsx` | Character presenter options |
+| Component                  | Purpose                            |
+| -------------------------- | ---------------------------------- |
+| `ContentInput.tsx`         | Text/URL/CSV content input         |
+| `StyleSelector.tsx`        | Visual style selection (20 styles) |
+| `CharacterSelector.tsx`    | Character presenter options        |
 | `PresentationSettings.tsx` | Aspect ratio, slide count, palette |
-| `PromptOutput.tsx` | Generated prompts display |
-| `SlideCard.tsx` | Individual slide prompt card |
+| `PromptOutput.tsx`         | Generated prompts display          |
+| `SlideCard.tsx`            | Individual slide prompt card       |
 
 ### UI Components (`src/components/ui/`)
 
 48 shadcn/ui components built on Radix UI primitives:
+
 - Dialog, Sheet, Dropdown, Popover
 - Button, Input, Textarea, Select
 - Tabs, Accordion, Collapsible
@@ -79,6 +82,7 @@ nano-banana-slides-prompter/
 ### State Management
 
 **Zustand Store** (`src/stores/sessionStore.ts`):
+
 - Session CRUD operations
 - Current session tracking
 - Abort controller management
@@ -86,33 +90,35 @@ nano-banana-slides-prompter/
 
 ### Custom Hooks
 
-| Hook | Purpose |
-|------|---------|
+| Hook                        | Purpose                             |
+| --------------------------- | ----------------------------------- |
 | `useStreamingGeneration.ts` | SSE streaming for prompt generation |
-| `use-toast.ts` | Toast notification management |
-| `use-mobile.tsx` | Mobile device detection |
+| `use-toast.ts`              | Toast notification management       |
+| `use-mobile.tsx`            | Mobile device detection             |
 
 ### Utilities (`src/lib/`)
 
-| File | Purpose |
-|------|---------|
-| `utils.ts` | Class name merging (clsx + tailwind-merge) |
-| `api.ts` | API client functions |
-| `promptGenerator.ts` | Prompt generation logic |
+| File                 | Purpose                                    |
+| -------------------- | ------------------------------------------ |
+| `utils.ts`           | Class name merging (clsx + tailwind-merge) |
+| `api.ts`             | API client functions                       |
+| `promptGenerator.ts` | Prompt generation logic                    |
 
 ### Internationalization (`src/i18n/`)
 
-| File | Purpose |
-|------|---------|
-| `index.ts` | i18next configuration |
-| `en.json` | English translations |
-| `zh.json` | Chinese translations |
+| File              | Purpose                 |
+| ----------------- | ----------------------- |
+| `index.ts`        | i18next configuration   |
+| `locales/en.json` | English translations    |
+| `locales/vi.json` | Vietnamese translations |
+| `locales/zh.json` | Chinese translations    |
 
 ## Backend Architecture
 
 ### Entry Point
 
 `server/src/index.ts` - Hono server with:
+
 - CORS middleware for allowed origins
 - Request logging
 - Route mounting
@@ -120,28 +126,29 @@ nano-banana-slides-prompter/
 
 ### Routes (`server/src/routes/`)
 
-| File | Endpoints | Description |
-|------|-----------|-------------|
-| `prompt.ts` | `POST /api/generate-prompt`, `POST /api/generate-prompt-stream` | Prompt generation |
-| `extract.ts` | `POST /api/extract-url` | URL content extraction |
-| `sessions.ts` | `GET/POST /api/sessions`, `PUT/DELETE /api/sessions/:id` | Session CRUD |
-| `settings.ts` | `GET /api/settings/llm` | LLM configuration |
+| File          | Endpoints                                                       | Description            |
+| ------------- | --------------------------------------------------------------- | ---------------------- |
+| `prompt.ts`   | `POST /api/generate-prompt`, `POST /api/generate-prompt-stream` | Prompt generation      |
+| `extract.ts`  | `POST /api/extract-url`                                         | URL content extraction |
+| `sessions.ts` | `GET/POST /api/sessions`, `PUT/DELETE /api/sessions/:id`        | Session CRUD           |
+| `settings.ts` | `GET /api/settings/llm`                                         | LLM configuration      |
 
 ### Services (`server/src/services/`)
 
-| File | Purpose |
-|------|---------|
-| `llm.ts` | OpenAI SDK wrapper, streaming support |
-| `scraper.ts` | Web scraping with Cheerio |
+| File         | Purpose                               |
+| ------------ | ------------------------------------- |
+| `llm.ts`     | OpenAI SDK wrapper, streaming support |
+| `scraper.ts` | Web scraping with Cheerio             |
 
 ### Prompts (`server/src/prompts/`)
 
-| File | Purpose | LOC |
-|------|---------|-----|
+| File        | Purpose                           | LOC    |
+| ----------- | --------------------------------- | ------ |
 | `system.ts` | System prompts, styles, templates | ~1,300 |
-| `types.ts` | Type definitions | ~280 |
+| `types.ts`  | Type definitions                  | ~280   |
 
 **System Prompt Features**:
+
 - 20 visual styles with personas
 - 13 color palettes
 - 8 character render styles
@@ -188,50 +195,51 @@ Return Structured Content → Update ContentInput
 
 ### Frontend
 
-| Category | Packages |
-|----------|----------|
-| Framework | React 19, React Router 7 |
-| Build | Vite 7, TypeScript 5 |
-| Styling | Tailwind CSS, tailwind-merge |
-| UI | Radix UI, shadcn/ui, lucide-react |
-| State | Zustand, TanStack Query |
-| i18n | i18next, react-i18next |
-| Forms | react-hook-form, zod |
+| Category  | Packages                          |
+| --------- | --------------------------------- |
+| Framework | React 19, React Router 7          |
+| Build     | Vite 7, TypeScript 5              |
+| Styling   | Tailwind CSS, tailwind-merge      |
+| UI        | Radix UI, shadcn/ui, lucide-react |
+| State     | Zustand, TanStack Query           |
+| i18n      | i18next, react-i18next            |
+| Forms     | react-hook-form, zod              |
 
 ### Backend
 
-| Category | Packages |
-|----------|----------|
-| Runtime | Bun |
-| Framework | Hono |
-| LLM | OpenAI SDK |
-| Scraping | Cheerio |
-| Validation | Zod |
+| Category   | Packages   |
+| ---------- | ---------- |
+| Runtime    | Bun        |
+| Framework  | Hono       |
+| LLM        | OpenAI SDK |
+| Scraping   | Cheerio    |
+| Validation | Zod        |
 
 ## File Count Summary
 
-| Directory | Files | Purpose |
-|-----------|-------|---------|
-| `src/components/ui/` | 48 | UI primitives |
-| `src/components/slide-prompt/` | 6 | Domain components |
-| `src/components/` | 4 | App components |
-| `src/pages/` | 2 | Route pages |
-| `src/stores/` | 1 | State store |
-| `src/hooks/` | 3 | Custom hooks |
-| `src/lib/` | 3 | Utilities |
-| `src/types/` | 1 | Type definitions |
-| `src/i18n/` | 3 | i18n config |
-| `server/src/routes/` | 4 | API routes |
-| `server/src/services/` | 2 | Services |
-| `server/src/prompts/` | 2 | Prompt logic |
-| `desktop/src/` | 6 | Electron main process |
-| `desktop/scripts/` | 1 | Build scripts |
+| Directory                      | Files | Purpose                          |
+| ------------------------------ | ----- | -------------------------------- |
+| `src/components/ui/`           | 48    | UI primitives                    |
+| `src/components/slide-prompt/` | 6     | Domain components                |
+| `src/components/`              | 4     | App components                   |
+| `src/pages/`                   | 2     | Route pages                      |
+| `src/stores/`                  | 2     | State stores (session, settings) |
+| `src/hooks/`                   | 3     | Custom hooks                     |
+| `src/lib/`                     | 3     | Utilities                        |
+| `src/types/`                   | 1     | Type definitions                 |
+| `src/i18n/`                    | 4     | i18n config + 3 locales          |
+| `server/src/routes/`           | 4     | API routes                       |
+| `server/src/services/`         | 2     | Services                         |
+| `server/src/prompts/`          | 2     | Prompt logic                     |
+| `desktop/src/`                 | 6     | Electron main process            |
+| `desktop/scripts/`             | 1     | Build scripts                    |
 
 ## Desktop Architecture
 
 ### Entry Point
 
 `desktop/src/main.ts` - Electron main process with:
+
 - BrowserWindow management (1400x900, min 1024x768)
 - IPC handler registration
 - Backend process lifecycle
@@ -240,33 +248,34 @@ Return Structured Content → Update ContentInput
 
 ### Desktop Components
 
-| File | Purpose |
-|------|---------|
-| `main.ts` | Window creation, IPC setup, app lifecycle |
-| `preload.ts` | Context bridge for secure renderer communication |
-| `backend-manager.ts` | Spawn/stop backend binary, port discovery |
-| `config-manager.ts` | Persistent user preferences (JSON file) |
-| `auto-updater.ts` | GitHub releases integration, download/install |
-| `menu.ts` | Native application menu (File, Edit, View, Help) |
+| File                 | Purpose                                          |
+| -------------------- | ------------------------------------------------ |
+| `main.ts`            | Window creation, IPC setup, app lifecycle        |
+| `preload.ts`         | Context bridge for secure renderer communication |
+| `backend-manager.ts` | Spawn/stop backend binary, port discovery        |
+| `config-manager.ts`  | Persistent user preferences (JSON file)          |
+| `auto-updater.ts`    | GitHub releases integration, download/install    |
+| `menu.ts`            | Native application menu (File, Edit, View, Help) |
 
 ### Build Scripts
 
-| File | Purpose |
-|------|---------|
+| File                       | Purpose                                 |
+| -------------------------- | --------------------------------------- |
 | `scripts/build-backend.ts` | Compile Bun server to standalone binary |
 
 ### Desktop Dependencies
 
-| Category | Packages |
-|----------|----------|
-| Runtime | Electron 33 |
-| Build | electron-builder 25 |
-| Updates | electron-updater 6 |
-| Logging | electron-log 5 |
+| Category | Packages            |
+| -------- | ------------------- |
+| Runtime  | Electron 33         |
+| Build    | electron-builder 25 |
+| Updates  | electron-updater 6  |
+| Logging  | electron-log 5      |
 
 ### Key Data Flows (Desktop)
 
 **App Startup Flow**:
+
 ```
 app.whenReady() → setupIPC() → createWindow()
     ↓
@@ -278,6 +287,7 @@ ready-to-show → checkForUpdates()
 ```
 
 **Update Flow**:
+
 ```
 checkForUpdates() → GitHub API
     ↓

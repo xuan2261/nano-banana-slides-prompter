@@ -1,5 +1,7 @@
 # Code Standards & Conventions
 
+**Version:** 1.2.2 | **Last Updated:** 2026-01-13
+
 ## Directory Organization
 
 ### Frontend (`src/`)
@@ -26,29 +28,45 @@ server/src/
 └── prompts/                # LLM prompt templates & types
 ```
 
+### Desktop (`desktop/`)
+
+```
+desktop/
+├── src/                    # Electron main process
+│   ├── main.ts             # Window, IPC, lifecycle
+│   ├── preload.ts          # Context bridge
+│   ├── backend-manager.ts  # Spawn/stop backend binary
+│   ├── config-manager.ts   # User preferences
+│   ├── auto-updater.ts     # GitHub releases updater
+│   └── menu.ts             # Native application menu
+├── scripts/                # Build scripts
+├── resources/              # App icons and assets
+└── renderer/               # Built frontend (production)
+```
+
 ## Naming Conventions
 
 ### Files & Directories
 
-| Type | Convention | Example |
-|------|------------|---------|
-| React Components | PascalCase | `ContentInput.tsx` |
-| Hooks | camelCase with `use` prefix | `useStreamingGeneration.ts` |
-| Stores | camelCase with `Store` suffix | `sessionStore.ts` |
-| Utilities | camelCase | `promptGenerator.ts` |
-| Types | camelCase | `slidePrompt.ts` |
-| Routes (backend) | kebab-case | `sessions.ts` |
+| Type             | Convention                    | Example                     |
+| ---------------- | ----------------------------- | --------------------------- |
+| React Components | PascalCase                    | `ContentInput.tsx`          |
+| Hooks            | camelCase with `use` prefix   | `useStreamingGeneration.ts` |
+| Stores           | camelCase with `Store` suffix | `sessionStore.ts`           |
+| Utilities        | camelCase                     | `promptGenerator.ts`        |
+| Types            | camelCase                     | `slidePrompt.ts`            |
+| Routes (backend) | kebab-case                    | `sessions.ts`               |
 
 ### Code Elements
 
-| Type | Convention | Example |
-|------|------------|---------|
-| Components | PascalCase | `SlideCard` |
-| Functions | camelCase | `generatePrompt()` |
-| Variables | camelCase | `slideCount` |
-| Constants | UPPER_SNAKE_CASE | `API_BASE` |
-| Types/Interfaces | PascalCase | `SessionStore` |
-| Enums | PascalCase | `SessionStatus` |
+| Type             | Convention       | Example            |
+| ---------------- | ---------------- | ------------------ |
+| Components       | PascalCase       | `SlideCard`        |
+| Functions        | camelCase        | `generatePrompt()` |
+| Variables        | camelCase        | `slideCount`       |
+| Constants        | UPPER_SNAKE_CASE | `API_BASE`         |
+| Types/Interfaces | PascalCase       | `SessionStore`     |
+| Enums            | PascalCase       | `SessionStatus`    |
 
 ## TypeScript Patterns
 
@@ -91,8 +109,8 @@ import type { Session, SlidePromptConfig } from '@/types/slidePrompt';
 
 ```typescript
 // Use @/ alias for src/ directory
-import { Button } from '@/components/ui/button';  // Good
-import { Button } from '../../../components/ui/button';  // Avoid
+import { Button } from '@/components/ui/button'; // Good
+import { Button } from '../../../components/ui/button'; // Avoid
 ```
 
 ## React Component Patterns
@@ -263,10 +281,13 @@ try {
 // Route-level error handling
 app.onError((err, c) => {
   console.error('Server error:', err);
-  return c.json({
-    success: false,
-    error: err.message || 'Internal server error'
-  }, 500);
+  return c.json(
+    {
+      success: false,
+      error: err.message || 'Internal server error',
+    },
+    500
+  );
 });
 ```
 
@@ -285,7 +306,7 @@ const { t } = useTranslation();
 ### Translation Files
 
 ```json
-// en.json
+// locales/en.json, locales/vi.json, locales/zh.json
 {
   "common": {
     "generate": "Generate",
@@ -297,7 +318,54 @@ const { t } = useTranslation();
 }
 ```
 
+**Supported Languages:**
+
+- UI Languages: English (en), Vietnamese (vi), Chinese (zh)
+- Output Languages: EN, VI, ZH, JA, KO, TH, ID, FR, DE, ES
+
+## Electron/IPC Patterns
+
+### Preload Script (Context Bridge)
+
+```typescript
+// desktop/src/preload.ts
+import { contextBridge, ipcRenderer } from 'electron';
+
+contextBridge.exposeInMainWorld('electronAPI', {
+  getBackendPort: () => ipcRenderer.invoke('get-backend-port'),
+  getAppVersion: () => ipcRenderer.invoke('get-app-version'),
+  checkForUpdates: () => ipcRenderer.invoke('check-for-updates'),
+  onUpdateStatus: (callback: (status: UpdateStatus) => void) =>
+    ipcRenderer.on('update-status', (_event, status) => callback(status)),
+});
+```
+
+### IPC Handler Registration (Main Process)
+
+```typescript
+// desktop/src/main.ts
+import { ipcMain } from 'electron';
+
+ipcMain.handle('get-backend-port', () => backendManager.getPort());
+ipcMain.handle('get-app-version', () => app.getVersion());
+ipcMain.handle('check-for-updates', () => autoUpdater.checkForUpdates());
+```
+
+### Security Best Practices
+
+| Setting            | Value   | Purpose                       |
+| ------------------ | ------- | ----------------------------- |
+| `contextIsolation` | `true`  | Isolate preload from renderer |
+| `nodeIntegration`  | `false` | Prevent Node.js in renderer   |
+| `sandbox`          | `true`  | Additional process isolation  |
+
 ## Testing Guidelines
+
+### Test Framework
+
+- **Vitest**: Fast unit test runner with native ESM support
+- **Testing Library**: React component testing
+- **Configuration**: `vitest.config.ts` at project root
 
 ### File Naming
 
@@ -310,6 +378,8 @@ api.integration.test.ts   # Integration tests
 ### Test Structure
 
 ```typescript
+import { describe, it, expect, vi } from 'vitest';
+
 describe('ComponentName', () => {
   it('should render correctly', () => {
     // Test implementation
@@ -319,6 +389,19 @@ describe('ComponentName', () => {
     // Test implementation
   });
 });
+```
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run with coverage
+npm run test:coverage
+
+# Watch mode
+npm run test:watch
 ```
 
 ## Git Conventions
@@ -360,9 +443,9 @@ PORT=3001
 
 ## Code Quality Tools
 
-| Tool | Purpose | Config File |
-|------|---------|-------------|
-| ESLint | Linting | `eslint.config.js` |
-| TypeScript | Type checking | `tsconfig.json` |
-| Prettier | Formatting | `.prettierrc` (if exists) |
-| Vite | Build & Dev | `vite.config.ts` |
+| Tool       | Purpose       | Config File               |
+| ---------- | ------------- | ------------------------- |
+| ESLint     | Linting       | `eslint.config.js`        |
+| TypeScript | Type checking | `tsconfig.json`           |
+| Prettier   | Formatting    | `.prettierrc` (if exists) |
+| Vite       | Build & Dev   | `vite.config.ts`          |

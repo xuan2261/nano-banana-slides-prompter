@@ -11,7 +11,7 @@ Generate optimized prompts for Nano Banana Pro Slides - AI-powered slide generat
 - **50+ Slide Templates**: Content-aware selection from Opening, Concept, Data, Process, Technical, Business categories
 - **Multiple Input Methods**: Text, URL extraction, CSV upload
 - **Session Management**: Save, load, and manage multiple presentations
-- **Internationalization**: English and Chinese support
+- **Internationalization**: English, Vietnamese, and Chinese support
 - **Configurable LLM**: OpenAI, OpenRouter, Ollama compatible
 
 ## Sample Slides
@@ -93,7 +93,7 @@ services:
   frontend:
     image: ghcr.io/nomie7/nano-banana-slides-prompter-frontend:latest
     ports:
-      - "80:80"
+      - '80:80'
     depends_on:
       - backend
     restart: always
@@ -122,12 +122,12 @@ The application is also available as a cross-platform desktop app.
 
 Download the latest release from [GitHub Releases](https://github.com/nomie7/nano-banana-slides-prompter/releases).
 
-| Platform | File |
-|----------|------|
-| Windows | `Nano-Banana-Slides-Prompter-{version}-win-x64.exe` |
-| macOS (Apple Silicon) | `Nano-Banana-Slides-Prompter-{version}-mac-arm64.dmg` |
-| macOS (Intel) | `Nano-Banana-Slides-Prompter-{version}-mac-x64.dmg` |
-| Linux | `Nano-Banana-Slides-Prompter-{version}-linux-x64.AppImage` |
+| Platform              | File                                                       |
+| --------------------- | ---------------------------------------------------------- |
+| Windows               | `Nano-Banana-Slides-Prompter-{version}-win-x64.exe`        |
+| macOS (Apple Silicon) | `Nano-Banana-Slides-Prompter-{version}-mac-arm64.dmg`      |
+| macOS (Intel)         | `Nano-Banana-Slides-Prompter-{version}-mac-x64.dmg`        |
+| Linux                 | `Nano-Banana-Slides-Prompter-{version}-linux-x64.AppImage` |
 
 ### Desktop Development
 
@@ -151,13 +151,13 @@ Output files are generated in `desktop/release/`.
 
 ## Tech Stack
 
-| Layer | Technologies |
-|-------|--------------|
+| Layer    | Technologies                                                   |
+| -------- | -------------------------------------------------------------- |
 | Frontend | React 19, TypeScript, Vite 7, Tailwind CSS, shadcn/ui, Zustand |
-| Backend | Bun, Hono, OpenAI SDK, Cheerio |
-| Desktop | Electron 33, electron-builder, electron-updater |
-| UI | Radix UI primitives, lucide-react icons |
-| i18n | react-i18next (EN/ZH) |
+| Backend  | Bun, Hono, OpenAI SDK, Cheerio                                 |
+| Desktop  | Electron 33, electron-builder, electron-updater                |
+| UI       | Radix UI primitives, lucide-react icons                        |
+| i18n     | react-i18next (EN/VI/ZH)                                       |
 
 ## Documentation
 
@@ -168,26 +168,30 @@ Output files are generated in `desktop/release/`.
 
 ## API Endpoints
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/generate-prompt-stream` | POST | Generate prompts (SSE) |
-| `/api/extract-url` | POST | Extract content from URL |
-| `/api/sessions` | GET/POST | Session management |
-| `/api/settings/llm` | GET | LLM configuration |
-| `/health` | GET | Health check |
+| Endpoint                      | Method   | Description              |
+| ----------------------------- | -------- | ------------------------ |
+| `/api/generate-prompt-stream` | POST     | Generate prompts (SSE)   |
+| `/api/extract-url`            | POST     | Extract content from URL |
+| `/api/sessions`               | GET/POST | Session management       |
+| `/api/settings/llm`           | GET      | LLM configuration        |
+| `/health`                     | GET      | Health check             |
 
 ## Version
 
-**v1.0.6** - Dynamic character generation, content-aware slide types
+**v1.2.2** - System upgrade with Vietnamese i18n, testing infrastructure, hot-reload settings
 
 ### Changelog
 
-| Version | Highlights |
-|---------|------------|
-| 1.0.6 | Dynamic character generation, 50+ slide templates, content-aware selection |
-| 1.0.5 | i18n (EN/ZH), session management, Zustand state, Vite 7 |
-| 1.0.4 | Character presenter with 8 render styles |
-| 1.0.3 | Style personas, expanded visual vocabulary, CSV support |
+| Version | Highlights                                                                                |
+| ------- | ----------------------------------------------------------------------------------------- |
+| 1.2.2   | Settings hot-reload using Zustand store                                                   |
+| 1.2.1   | CI workflow fixes, auto-release                                                           |
+| 1.2.0   | System upgrade: Vitest testing, Vietnamese i18n, output language selection (10 languages) |
+| 1.1.x   | Desktop app improvements, electron-updater                                                |
+| 1.0.6   | Dynamic character generation, 50+ slide templates, content-aware selection                |
+| 1.0.5   | i18n (EN/ZH), session management, Zustand state, Vite 7                                   |
+| 1.0.4   | Character presenter with 8 render styles                                                  |
+| 1.0.3   | Style personas, expanded visual vocabulary, CSV support                                   |
 
 ## License
 
