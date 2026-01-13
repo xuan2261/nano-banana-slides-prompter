@@ -36,7 +36,7 @@ jobs:
             echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
           fi
 
-  create-tag:
+  sync-and-tag:
     needs: check-version
     if: needs.check-version.outputs.should_release == 'true'
     runs-on: ubuntu-latest
@@ -47,6 +47,32 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Sync desktop version
+        run: |
+          VERSION="${{ needs.check-version.outputs.version }}"
+          # Update desktop/package.json version to match root
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('desktop/package.json', 'utf8'));
+            pkg.version = '$VERSION';
+            fs.writeFileSync('desktop/package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+          echo "Updated desktop/package.json to version $VERSION"
+
+      - name: Commit version sync
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add desktop/package.json
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: sync desktop version to ${{ needs.check-version.outputs.version }}"
+            git push
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create and push tag
         run: |
           git config user.name "github-actions[bot]"
@@ -55,14 +81,3 @@ jobs:
           git push origin "v${{ needs.check-version.outputs.version }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  trigger-build:
-    needs: [check-version, create-tag]
-    if: needs.check-version.outputs.should_release == 'true'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Trigger Electron Build
-        run: |
-          echo "Tag v${{ needs.check-version.outputs.version }} created."
-          echo "Electron Build workflow will be triggered automatically by the tag push."
