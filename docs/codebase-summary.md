@@ -1,6 +1,6 @@
 # Codebase Summary
 
-**Version:** 1.2.5 | **Last Updated:** 2026-01-13
+**Version:** 2.0.0 | **Last Updated:** 2026-01-13
 
 ## Overview
 

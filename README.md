@@ -179,12 +179,14 @@ Output files are generated in `desktop/release/`.
 
 ## Version
 
-**v1.2.5** - Phase 2: Core Integrations (Prompt Optimizer, PDF Preview, Design Tools Export)
+**v2.0.0** - Phase 4: Education & Business Features (Quiz Templates, Brand Kit, Course Builder)
 
 ### Changelog
 
 | Version | Highlights                                                                                |
 | ------- | ----------------------------------------------------------------------------------------- |
+| 2.0.0   | Quiz Templates (4 types), Brand Kit, Course Builder (Beta), Security enhancements         |
+| 1.3.0   | Gemini Image Generation integration                                                       |
 | 1.2.5   | Prompt Optimizer (self-refine), PDF Preview modal, Canva/Figma JSON export                |
 | 1.2.4   | Remove redundant PromptPreview component, add export dropdown (MD, TXT, JSON)             |
 | 1.2.3   | Fix auto-release workflow for fork compatibility                                          |

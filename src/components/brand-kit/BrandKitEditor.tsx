@@ -53,6 +53,13 @@ export function BrandKitEditor() {
     reader.onloadend = () => {
       updateBrandKit({ logoUrl: reader.result as string });
     };
+    reader.onerror = () => {
+      toast({
+        variant: 'destructive',
+        title: t('brandKit.readError', 'Read Error'),
+        description: t('brandKit.readErrorDesc', 'Failed to read the file. Please try again.'),
+      });
+    };
     reader.readAsDataURL(file);
   };
 
