@@ -178,12 +178,13 @@ Output files are generated in `desktop/release/`.
 
 ## Version
 
-**v1.2.2** - System upgrade with Vietnamese i18n, testing infrastructure, hot-reload settings
+**v1.2.3** - Fork-compatible auto-release workflow
 
 ### Changelog
 
 | Version | Highlights                                                                                |
 | ------- | ----------------------------------------------------------------------------------------- |
+| 1.2.3   | Fix auto-release workflow for fork compatibility                                          |
 | 1.2.2   | Settings hot-reload using Zustand store                                                   |
 | 1.2.1   | CI workflow fixes, auto-release                                                           |
 | 1.2.0   | System upgrade: Vitest testing, Vietnamese i18n, output language selection (10 languages) |
