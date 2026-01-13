@@ -12,34 +12,14 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
+import { useSettingsStore } from '@/stores/settingsStore';
 
 const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:3001').replace(/\/$/, '');
-const STORAGE_KEY = 'nano-banana-llm-settings';
-
-export interface LLMSettings {
-  apiKey: string;
-  baseURL: string;
-  model: string;
-}
-
-export function useLLMSettings() {
-  const [settings, setSettings] = useState<LLMSettings | null>(null);
-
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setSettings(JSON.parse(stored));
-    } catch {
-      /* ignore */
-    }
-  }, []);
-
-  return { settings };
-}
 
 export function SettingsDialog() {
   const { t } = useTranslation();
   const { toast } = useToast();
+  const { settings: storedSettings, setSettings, clearSettings } = useSettingsStore();
   const [open, setOpen] = useState(false);
   const [showApiKey, setShowApiKey] = useState(false);
   const [defaultConfig, setDefaultConfig] = useState<{ baseURL: string; model: string } | null>(
@@ -55,16 +35,10 @@ export function SettingsDialog() {
       .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`${res.status}`))))
       .then((data) => {
         setDefaultConfig(data);
-        try {
-          const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-          setApiKey(parsed.apiKey || '');
-          setBaseURL(parsed.baseURL || data.baseURL || '');
-          setModel(parsed.model || data.model || '');
-        } catch {
-          setApiKey('');
-          setBaseURL(data.baseURL || '');
-          setModel(data.model || '');
-        }
+        // Load from Zustand store instead of raw localStorage
+        setApiKey(storedSettings?.apiKey || '');
+        setBaseURL(storedSettings?.baseURL || data.baseURL || '');
+        setModel(storedSettings?.model || data.model || '');
       })
       .catch(() => {
         toast({
@@ -73,7 +47,7 @@ export function SettingsDialog() {
           variant: 'destructive',
         });
       });
-  }, [open, toast, t]);
+  }, [open, toast, t, storedSettings]);
 
   const handleSave = () => {
     if (!baseURL.trim() || !model.trim()) {
@@ -102,16 +76,18 @@ export function SettingsDialog() {
       });
       return;
     }
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({ apiKey: apiKey.trim(), baseURL: baseURL.trim(), model: model.trim() })
-    );
+    // Save to Zustand store (auto-persists to localStorage)
+    setSettings({
+      apiKey: apiKey.trim(),
+      baseURL: baseURL.trim(),
+      model: model.trim(),
+    });
     toast({ title: t('settings.saved') });
     setOpen(false);
   };
 
   const handleReset = () => {
-    localStorage.removeItem(STORAGE_KEY);
+    clearSettings();
     setApiKey('');
     setBaseURL(defaultConfig?.baseURL || '');
     setModel(defaultConfig?.model || '');

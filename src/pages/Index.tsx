@@ -11,9 +11,10 @@ import { PresentationSettings } from '@/components/slide-prompt/PresentationSett
 import { PromptOutput } from '@/components/slide-prompt/PromptOutput';
 import { PromptPreview } from '@/components/PromptPreview';
 import { SessionSidebar } from '@/components/SessionSidebar';
-import { SettingsDialog, useLLMSettings } from '@/components/SettingsDialog';
+import { SettingsDialog } from '@/components/SettingsDialog';
 import { useStreamingGeneration } from '@/hooks/useStreamingGeneration';
 import { useSessionStore } from '@/stores/sessionStore';
+import { useSettingsStore } from '@/stores/settingsStore';
 import { useToast } from '@/hooks/use-toast';
 import type {
   ContentInput as ContentInputType,
@@ -41,7 +42,7 @@ export default function Index() {
   const { t } = useTranslation();
   const { toast } = useToast();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { settings: llmSettings } = useLLMSettings();
+  const { settings: llmSettings } = useSettingsStore();
 
   const {
     sessions,
