@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.21.0",
     "@hono/zod-validator": "^0.4.0",
     "cheerio": "^1.0.0",
     "hono": "^4.6.0",

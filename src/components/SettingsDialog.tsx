@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Settings, RotateCcw, Save, Eye, EyeOff } from 'lucide-react';
+import { Settings, RotateCcw, Save, Eye, EyeOff, Loader2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
 import {
   Dialog,
   DialogContent,
@@ -19,23 +21,45 @@ const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:3001').repla
 export function SettingsDialog() {
   const { t } = useTranslation();
   const { toast } = useToast();
-  const { settings: storedSettings, setSettings, clearSettings } = useSettingsStore();
+  const {
+    settings: storedSettings,
+    geminiSettings: storedGeminiSettings,
+    setSettings,
+    setGeminiSettings,
+    clearSettings,
+    clearGeminiSettings,
+  } = useSettingsStore();
+
   const [open, setOpen] = useState(false);
   const [showApiKey, setShowApiKey] = useState(false);
+  const [showGeminiKey, setShowGeminiKey] = useState(false);
+  const [testingConnection, setTestingConnection] = useState(false);
   const [defaultConfig, setDefaultConfig] = useState<{ baseURL: string; model: string } | null>(
     null
   );
+  const [geminiDefaultConfig, setGeminiDefaultConfig] = useState<{
+    model: string;
+    hasApiKey: boolean;
+  } | null>(null);
+
+  // LLM Settings
   const [apiKey, setApiKey] = useState('');
   const [baseURL, setBaseURL] = useState('');
   const [model, setModel] = useState('');
 
+  // Gemini Settings
+  const [geminiApiKey, setGeminiApiKey] = useState('');
+  const [geminiModel, setGeminiModel] = useState('');
+  const [geminiEnabled, setGeminiEnabled] = useState(false);
+
   useEffect(() => {
     if (!open) return;
+
+    // Load LLM settings
     fetch(`${API_BASE}/api/settings/llm`)
       .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`${res.status}`))))
       .then((data) => {
         setDefaultConfig(data);
-        // Load from Zustand store instead of raw localStorage
         setApiKey(storedSettings?.apiKey || '');
         setBaseURL(storedSettings?.baseURL || data.baseURL || '');
         setModel(storedSettings?.model || data.model || '');
@@ -47,7 +71,24 @@ export function SettingsDialog() {
           variant: 'destructive',
         });
       });
-  }, [open, toast, t, storedSettings]);
+
+    // Load Gemini settings
+    fetch(`${API_BASE}/api/gemini/config`)
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`${res.status}`))))
+      .then((data) => {
+        setGeminiDefaultConfig(data);
+        setGeminiApiKey(storedGeminiSettings?.apiKey || '');
+        setGeminiModel(storedGeminiSettings?.model || data.model || '');
+        setGeminiEnabled(storedGeminiSettings?.enabled ?? false);
+      })
+      .catch(() => {
+        // Gemini config optional, ignore errors
+        setGeminiDefaultConfig({
+          model: 'gemini-2.0-flash-preview-image-generation',
+          hasApiKey: false,
+        });
+      });
+  }, [open, toast, t, storedSettings, storedGeminiSettings]);
 
   const handleSave = () => {
     if (!baseURL.trim() || !model.trim()) {
@@ -76,22 +117,74 @@ export function SettingsDialog() {
       });
       return;
     }
-    // Save to Zustand store (auto-persists to localStorage)
+
+    // Save LLM settings
     setSettings({
       apiKey: apiKey.trim(),
       baseURL: baseURL.trim(),
       model: model.trim(),
     });
+
+    // Save Gemini settings
+    setGeminiSettings({
+      apiKey: geminiApiKey.trim(),
+      model: geminiModel.trim() || geminiDefaultConfig?.model || '',
+      enabled: geminiEnabled,
+    });
+
     toast({ title: t('settings.saved') });
     setOpen(false);
   };
 
   const handleReset = () => {
     clearSettings();
+    clearGeminiSettings();
     setApiKey('');
     setBaseURL(defaultConfig?.baseURL || '');
     setModel(defaultConfig?.model || '');
+    setGeminiApiKey('');
+    setGeminiModel(geminiDefaultConfig?.model || '');
+    setGeminiEnabled(false);
     toast({ title: t('settings.reset') });
+  };
+
+  const handleTestGeminiConnection = async () => {
+    if (!geminiApiKey.trim()) {
+      toast({
+        title: t('gemini.testFailed'),
+        description: t('gemini.noApiKey'),
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setTestingConnection(true);
+    try {
+      const response = await fetch(`${API_BASE}/api/gemini/test-connection`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ apiKey: geminiApiKey.trim() }),
+      });
+      const data = await response.json();
+
+      if (data.success) {
+        toast({ title: t('gemini.testSuccess') });
+      } else {
+        toast({
+          title: t('gemini.testFailed'),
+          description: data.error,
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: t('gemini.testFailed'),
+        description: error instanceof Error ? error.message : 'Unknown error',
+        variant: 'destructive',
+      });
+    } finally {
+      setTestingConnection(false);
+    }
   };
 
   return (
@@ -101,11 +194,12 @@ export function SettingsDialog() {
           <Settings className="h-5 w-5" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t('settings.title')}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-4">
+          {/* LLM Settings */}
           <div className="space-y-2">
             <Label>{t('settings.baseURL')}</Label>
             <Input
@@ -149,12 +243,82 @@ export function SettingsDialog() {
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">{t('settings.apiKeyHint')}</p>
-            <p className="text-[11px] text-muted-foreground">
-              {t(
-                'settings.securityNote',
-                'Your key is stored locally in this browser only. Clear storage to remove it.'
+          </div>
+
+          <Separator className="my-4" />
+
+          {/* Gemini Settings */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-primary" />
+              <h4 className="font-medium">{t('gemini.title')}</h4>
+            </div>
+            <p className="text-xs text-muted-foreground">{t('gemini.description')}</p>
+
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label>{t('gemini.enabled')}</Label>
+                <p className="text-xs text-muted-foreground">{t('gemini.enabledHint')}</p>
+              </div>
+              <Switch checked={geminiEnabled} onCheckedChange={setGeminiEnabled} />
+            </div>
+
+            <div className="space-y-2">
+              <Label>{t('gemini.apiKey')}</Label>
+              <div className="relative">
+                <Input
+                  type={showGeminiKey ? 'text' : 'password'}
+                  value={geminiApiKey}
+                  onChange={(e) => setGeminiApiKey(e.target.value)}
+                  placeholder="AIza..."
+                  className="pr-10"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 top-0 h-full px-3"
+                  onClick={() => setShowGeminiKey(!showGeminiKey)}
+                >
+                  {showGeminiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground">{t('gemini.apiKeyHint')}</p>
+            </div>
+
+            <div className="space-y-2">
+              <Label>{t('gemini.model')}</Label>
+              <Input
+                value={geminiModel}
+                onChange={(e) => setGeminiModel(e.target.value)}
+                placeholder={
+                  geminiDefaultConfig?.model || 'gemini-2.0-flash-preview-image-generation'
+                }
+              />
+              <p className="text-xs text-muted-foreground">
+                {t('gemini.modelHint', {
+                  default:
+                    geminiDefaultConfig?.model || 'gemini-2.0-flash-preview-image-generation',
+                })}
+              </p>
+            </div>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleTestGeminiConnection}
+              disabled={testingConnection || !geminiApiKey.trim()}
+              className="w-full"
+            >
+              {testingConnection ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  {t('gemini.testing')}
+                </>
+              ) : (
+                t('gemini.testConnection')
               )}
-            </p>
+            </Button>
           </div>
 
           <div className="flex gap-2 pt-4">

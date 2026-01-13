@@ -350,5 +350,30 @@
         "description": "艺术画廊和展览展示"
       }
     }
+  },
+  "gemini": {
+    "title": "Gemini 图像生成",
+    "description": "使用 Google Gemini 生成幻灯片图像",
+    "apiKey": "Gemini API 密钥",
+    "apiKeyHint": "从 Google AI Studio 获取密钥",
+    "model": "模型",
+    "modelHint": "默认: {{default}}",
+    "enabled": "启用 Gemini",
+    "enabledHint": "在提示词输出中显示生成图像按钮",
+    "testConnection": "测试连接",
+    "testing": "测试中...",
+    "testSuccess": "连接成功",
+    "testFailed": "连接失败",
+    "generateImage": "生成图像",
+    "generateImages": "生成图像",
+    "generating": "生成中...",
+    "preview": "图像预览",
+    "slideOf": "幻灯片 {{current}}/{{total}}",
+    "download": "下载",
+    "downloadAll": "下载全部",
+    "close": "关闭",
+    "noApiKey": "请在设置中配置 Gemini API 密钥",
+    "generationFailed": "图像生成失败",
+    "generationSuccess": "已生成 {{count}} 张图像"
   }
 }

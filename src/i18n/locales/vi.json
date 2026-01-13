@@ -375,5 +375,30 @@
     "jobFailed": "Thất bại",
     "maxTopics": "Tối đa {{max}} chủ đề",
     "noTopics": "Chưa có chủ đề nào"
+  },
+  "gemini": {
+    "title": "Tạo Hình Ảnh Gemini",
+    "description": "Tạo hình ảnh slide bằng Google Gemini",
+    "apiKey": "Gemini API Key",
+    "apiKeyHint": "Lấy key từ Google AI Studio",
+    "model": "Mô Hình",
+    "modelHint": "Mặc định: {{default}}",
+    "enabled": "Bật Gemini",
+    "enabledHint": "Hiển thị nút Tạo Hình Ảnh trong kết quả prompt",
+    "testConnection": "Kiểm Tra Kết Nối",
+    "testing": "Đang kiểm tra...",
+    "testSuccess": "Kết nối thành công",
+    "testFailed": "Kết nối thất bại",
+    "generateImage": "Tạo Hình Ảnh",
+    "generateImages": "Tạo Hình Ảnh",
+    "generating": "Đang tạo...",
+    "preview": "Xem Trước Hình Ảnh",
+    "slideOf": "Slide {{current}}/{{total}}",
+    "download": "Tải Xuống",
+    "downloadAll": "Tải Tất Cả",
+    "close": "Đóng",
+    "noApiKey": "Vui lòng cấu hình Gemini API key trong cài đặt",
+    "generationFailed": "Tạo hình ảnh thất bại",
+    "generationSuccess": "Đã tạo {{count}} hình ảnh"
   }
 }

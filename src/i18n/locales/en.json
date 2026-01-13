@@ -378,5 +378,30 @@
     "jobFailed": "Failed",
     "maxTopics": "Maximum {{max}} topics allowed",
     "noTopics": "No topics added yet"
+  },
+  "gemini": {
+    "title": "Gemini Image Generation",
+    "description": "Generate slide images using Google Gemini",
+    "apiKey": "Gemini API Key",
+    "apiKeyHint": "Get your key from Google AI Studio",
+    "model": "Model",
+    "modelHint": "Default: {{default}}",
+    "enabled": "Enable Gemini",
+    "enabledHint": "Show Generate Image button in prompt output",
+    "testConnection": "Test Connection",
+    "testing": "Testing...",
+    "testSuccess": "Connection successful",
+    "testFailed": "Connection failed",
+    "generateImage": "Generate Image",
+    "generateImages": "Generate Images",
+    "generating": "Generating...",
+    "preview": "Image Preview",
+    "slideOf": "Slide {{current}} of {{total}}",
+    "download": "Download",
+    "downloadAll": "Download All",
+    "close": "Close",
+    "noApiKey": "Please configure Gemini API key in settings",
+    "generationFailed": "Image generation failed",
+    "generationSuccess": "Generated {{count}} images"
   }
 }

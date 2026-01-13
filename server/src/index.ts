@@ -6,6 +6,7 @@ import { extractRouter } from './routes/extract';
 import { sessionsRouter } from './routes/sessions';
 import { settingsRouter } from './routes/settings';
 import { optimizeRouter } from './routes/optimize';
+import { geminiRouter } from './routes/gemini';
 import importRoutes from './routes/import';
 
 const app = new Hono();
@@ -38,6 +39,7 @@ app.route('/api', extractRouter);
 app.route('/api', sessionsRouter);
 app.route('/api', settingsRouter);
 app.route('/api', optimizeRouter);
+app.route('/api/gemini', geminiRouter);
 app.route('/api/import', importRoutes);
 
 app.notFound((c) => c.json({ error: 'Not Found' }, 404));
