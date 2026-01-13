@@ -49,18 +49,18 @@ app.onError((err, c) => {
   return c.json({ success: false, error: err.message || 'Internal server error' }, 500);
 });
 
-const port = Number(process.env.PORT) || 3001;
-console.log(`Starting server on port ${port}...`);
+const requestedPort = Number(process.env.PORT) || 3001;
+console.log(`Starting server on port ${requestedPort}...`);
 
-// Export server configuration
-const server = {
-  port,
+// Use Bun.serve explicitly to get actual bound port (critical for PORT=0 dynamic allocation)
+const server = Bun.serve({
+  port: requestedPort,
   fetch: app.fetch,
   idleTimeout: 255,
-};
+});
 
-// Output PORT for Electron IPC detection (must be after server starts)
-// Bun.serve returns immediately, so we output right away
-console.log(`PORT:${port}`);
+// Output ACTUAL bound port for Electron IPC detection (after server starts)
+console.log(`PORT:${server.port}`);
+console.log(`Server running at http://localhost:${server.port}`);
 
 export default server;

@@ -3,7 +3,7 @@ import * as path from 'path';
 import { app } from 'electron';
 import log from 'electron-log';
 
-const BACKEND_START_TIMEOUT = 10000; // 10 seconds
+const BACKEND_START_TIMEOUT = 30000; // 30 seconds (increased for slower systems)
 
 export class BackendManager {
   private process: ChildProcess | null = null;
@@ -103,10 +103,25 @@ export class BackendManager {
         log.warn(`Backend stderr: ${data.toString()}`);
       });
 
-      this.process.on('error', (error) => {
-        log.error('Backend process error:', error);
+      this.process.on('error', (error: NodeJS.ErrnoException) => {
         clearTimeout(timeout);
         this.isRunning = false;
+
+        // Provide detailed error message for common issues
+        if (error.code === 'ENOENT') {
+          const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged;
+          if (isDev) {
+            log.error(
+              `Backend error: 'bun' command not found. Please install Bun runtime: https://bun.sh`
+            );
+          } else {
+            log.error(
+              `Backend error: Binary not found at ${backendPath}. The app may not be properly installed.`
+            );
+          }
+        } else {
+          log.error('Backend process error:', error);
+        }
         reject(error);
       });
 
