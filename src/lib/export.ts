@@ -1,8 +1,8 @@
 import type { Session, ParsedSlide, GeneratedPrompt } from '@/types/slidePrompt';
-import { exportToPptx, exportToPdf } from './exporters';
+import { exportToPptx, exportToPdf, exportToCanvaJson, exportToFigmaJson } from './exporters';
 import { sanitizeFilename } from './utils/sanitize-filename';
 
-export type ExportFormat = 'json' | 'markdown' | 'text' | 'pptx' | 'pdf';
+export type ExportFormat = 'json' | 'markdown' | 'text' | 'pptx' | 'pdf' | 'canva' | 'figma';
 
 /**
  * Downloads a file with the given content and filename
@@ -100,6 +100,12 @@ export async function exportSession(session: Session, format: ExportFormat): Pro
       break;
     case 'pdf':
       await exportToPdf(session);
+      break;
+    case 'canva':
+      exportToCanvaJson(session);
+      break;
+    case 'figma':
+      exportToFigmaJson(session);
       break;
   }
 }

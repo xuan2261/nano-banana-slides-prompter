@@ -193,6 +193,12 @@ export function SessionSidebar({ isOpen }: SessionSidebarProps) {
                         <DropdownMenuItem onClick={() => exportSessionById(session.id, 'pdf')}>
                           {t('export.asPDF', 'Export as PDF')}
                         </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => exportSessionById(session.id, 'canva')}>
+                          {t('export.asCanva', 'Export for Canva')}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => exportSessionById(session.id, 'figma')}>
+                          {t('export.asFigma', 'Export for Figma')}
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                     <Button

@@ -1,6 +1,6 @@
 # Codebase Summary
 
-**Version:** 1.2.2 | **Last Updated:** 2026-01-13
+**Version:** 1.2.5 | **Last Updated:** 2026-01-13
 
 ## Overview
 
@@ -93,16 +93,26 @@ nano-banana-slides-prompter/
 | Hook                        | Purpose                             |
 | --------------------------- | ----------------------------------- |
 | `useStreamingGeneration.ts` | SSE streaming for prompt generation |
+| `usePromptOptimizer.ts`     | Prompt optimization via LLM         |
 | `use-toast.ts`              | Toast notification management       |
 | `use-mobile.tsx`            | Mobile device detection             |
 
 ### Utilities (`src/lib/`)
 
-| File                 | Purpose                                    |
-| -------------------- | ------------------------------------------ |
-| `utils.ts`           | Class name merging (clsx + tailwind-merge) |
-| `api.ts`             | API client functions                       |
-| `promptGenerator.ts` | Prompt generation logic                    |
+| File                 | Purpose                                                       |
+| -------------------- | ------------------------------------------------------------- |
+| `utils.ts`           | Class name merging (clsx + tailwind-merge)                    |
+| `api.ts`             | API client functions                                          |
+| `promptGenerator.ts` | Prompt generation logic                                       |
+| `export.ts`          | Export orchestration (MD, TXT, JSON, PPTX, PDF, Canva, Figma) |
+
+### Exporters (`src/lib/exporters/`)
+
+| File                | Purpose                  |
+| ------------------- | ------------------------ |
+| `index.ts`          | Re-exports all exporters |
+| `canva-exporter.ts` | Canva JSON format export |
+| `figma-exporter.ts` | Figma JSON format export |
 
 ### Internationalization (`src/i18n/`)
 
@@ -132,20 +142,23 @@ nano-banana-slides-prompter/
 | `extract.ts`  | `POST /api/extract-url`                                         | URL content extraction |
 | `sessions.ts` | `GET/POST /api/sessions`, `PUT/DELETE /api/sessions/:id`        | Session CRUD           |
 | `settings.ts` | `GET /api/settings/llm`                                         | LLM configuration      |
+| `optimize.ts` | `POST /api/optimize-prompt`                                     | Prompt optimization    |
 
 ### Services (`server/src/services/`)
 
-| File         | Purpose                               |
-| ------------ | ------------------------------------- |
-| `llm.ts`     | OpenAI SDK wrapper, streaming support |
-| `scraper.ts` | Web scraping with Cheerio             |
+| File                 | Purpose                               |
+| -------------------- | ------------------------------------- |
+| `llm.ts`             | OpenAI SDK wrapper, streaming support |
+| `scraper.ts`         | Web scraping with Cheerio             |
+| `promptOptimizer.ts` | Self-refine prompt optimization       |
 
 ### Prompts (`server/src/prompts/`)
 
-| File        | Purpose                           | LOC    |
-| ----------- | --------------------------------- | ------ |
-| `system.ts` | System prompts, styles, templates | ~1,300 |
-| `types.ts`  | Type definitions                  | ~280   |
+| File           | Purpose                           | LOC    |
+| -------------- | --------------------------------- | ------ |
+| `system.ts`    | System prompts, styles, templates | ~1,300 |
+| `types.ts`     | Type definitions                  | ~280   |
+| `optimizer.ts` | Optimizer system prompts          | ~100   |
 
 **System Prompt Features**:
 
@@ -228,9 +241,9 @@ Return Structured Content → Update ContentInput
 | `src/lib/`                     | 3     | Utilities                        |
 | `src/types/`                   | 1     | Type definitions                 |
 | `src/i18n/`                    | 4     | i18n config + 3 locales          |
-| `server/src/routes/`           | 4     | API routes                       |
-| `server/src/services/`         | 2     | Services                         |
-| `server/src/prompts/`          | 2     | Prompt logic                     |
+| `server/src/routes/`           | 5     | API routes                       |
+| `server/src/services/`         | 3     | Services                         |
+| `server/src/prompts/`          | 3     | Prompt logic                     |
 | `desktop/src/`                 | 6     | Electron main process            |
 | `desktop/scripts/`             | 1     | Build scripts                    |
 

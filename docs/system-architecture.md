@@ -1,6 +1,6 @@
 # System Architecture
 
-**Version:** 1.2.2 | **Last Updated:** 2026-01-13
+**Version:** 1.2.5 | **Last Updated:** 2026-01-13
 
 ## High-Level Overview
 
@@ -129,14 +129,17 @@ flowchart TD
     Router -->|/api/extract-url| Extract[Extract Route]
     Router -->|/api/sessions| Sessions[Sessions Route]
     Router -->|/api/settings| Settings[Settings Route]
+    Router -->|/api/optimize-prompt| Optimize[Optimize Route]
     Router -->|/health| Health[Health Check]
 
     Prompt --> LLMService[LLM Service]
     Extract --> ScraperService[Scraper Service]
     Sessions --> FileStorage[File Storage]
+    Optimize --> OptimizerService[Prompt Optimizer Service]
 
     LLMService --> OpenAI[OpenAI SDK]
     ScraperService --> Cheerio[Cheerio Parser]
+    OptimizerService --> OpenAI
 ```
 
 ### API Endpoints
@@ -147,6 +150,7 @@ flowchart TD
 | `/api/generate-prompt`        | POST   | Generate prompts    | `SlidePromptConfig`              | `{ slides: ParsedSlide[] }`      |
 | `/api/generate-prompt-stream` | POST   | Stream prompts      | `SlidePromptConfig`              | SSE stream                       |
 | `/api/extract-url`            | POST   | Extract URL content | `{ url }`                        | `{ title, content }`             |
+| `/api/optimize-prompt`        | POST   | Optimize prompt     | `{ prompt, context }`            | `{ optimizedPrompt, changes }`   |
 | `/api/sessions`               | GET    | List sessions       | -                                | `{ sessions, currentSessionId }` |
 | `/api/sessions`               | POST   | Create session      | `Session`                        | `{ success, session }`           |
 | `/api/sessions/:id`           | PUT    | Update session      | `Partial<Session>`               | `{ success }`                    |
@@ -177,6 +181,12 @@ classDiagram
         +saveSession(session) Promise~void~
         +deleteSession(id) Promise~void~
         +syncSessions(data) Promise~void~
+    }
+
+    class PromptOptimizerService {
+        +optimize(prompt, context) Promise~OptimizedResult~
+        -analyzePrompt(prompt) PromptAnalysis
+        -generateImprovement(analysis) string
     }
 ```
 

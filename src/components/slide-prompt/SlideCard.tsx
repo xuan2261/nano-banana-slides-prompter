@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChevronDown, ChevronRight, Check, Copy } from 'lucide-react';
+import { ChevronDown, ChevronRight, Check, Copy, Sparkles, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useToast } from '@/hooks/use-toast';
+import { usePromptOptimizer } from '@/hooks/usePromptOptimizer';
+import { OptimizationDiff } from '@/components/optimizer/OptimizationDiff';
 import type { ParsedSlide } from '@/types/slidePrompt';
 
 interface SlideCardProps {
@@ -11,6 +13,7 @@ interface SlideCardProps {
   defaultOpen?: boolean;
   isNew?: boolean;
   animationDelay?: number;
+  onPromptUpdate?: (slideNumber: number, newPrompt: string) => void;
 }
 
 export function SlideCard({
@@ -18,6 +21,7 @@ export function SlideCard({
   defaultOpen = false,
   isNew = false,
   animationDelay = 0,
+  onPromptUpdate,
 }: SlideCardProps) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(defaultOpen);
@@ -27,7 +31,9 @@ export function SlideCard({
   }, [defaultOpen]);
   const [copied, setCopied] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(!isNew);
+  const [showOptimizationDiff, setShowOptimizationDiff] = useState(false);
   const { toast } = useToast();
+  const { isOptimizing, result, optimize, reset } = usePromptOptimizer();
 
   useEffect(() => {
     if (isNew && !hasAnimated) {
@@ -62,6 +68,25 @@ export function SlideCard({
 
   const animationStyle = isNew && !hasAnimated ? { animationDelay: `${animationDelay}ms` } : {};
 
+  const handleOptimize = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const result = await optimize(slide.prompt);
+    if (result) {
+      setShowOptimizationDiff(true);
+    }
+  };
+
+  const handleAcceptOptimization = (optimizedPrompt: string) => {
+    if (onPromptUpdate) {
+      onPromptUpdate(slide.slideNumber, optimizedPrompt);
+    }
+    reset();
+  };
+
+  const handleRejectOptimization = () => {
+    reset();
+  };
+
   return (
     <Collapsible
       open={isOpen}
@@ -84,24 +109,45 @@ export function SlideCard({
               <span className="font-medium text-foreground">{slide.title}</span>
             </div>
           </div>
-          <Button
-            onClick={handleCopy}
-            variant="ghost"
-            size="sm"
-            className="h-8 px-3 opacity-70 hover:opacity-100 transition-opacity"
-          >
-            {copied ? (
-              <>
-                <Check className="h-3.5 w-3.5 mr-1.5 text-green-500" />
-                <span className="text-xs">{t('buttons.copied')}</span>
-              </>
-            ) : (
-              <>
-                <Copy className="h-3.5 w-3.5 mr-1.5" />
-                <span className="text-xs">{t('buttons.copy')}</span>
-              </>
-            )}
-          </Button>
+          <div className="flex items-center gap-1">
+            <Button
+              onClick={handleOptimize}
+              variant="ghost"
+              size="sm"
+              className="h-8 px-3 opacity-70 hover:opacity-100 transition-opacity"
+              disabled={isOptimizing}
+            >
+              {isOptimizing ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                  <span className="text-xs">{t('buttons.optimizing', 'Optimizing...')}</span>
+                </>
+              ) : (
+                <>
+                  <Sparkles className="h-3.5 w-3.5 mr-1.5 text-yellow-500" />
+                  <span className="text-xs">{t('buttons.optimize', 'Optimize')}</span>
+                </>
+              )}
+            </Button>
+            <Button
+              onClick={handleCopy}
+              variant="ghost"
+              size="sm"
+              className="h-8 px-3 opacity-70 hover:opacity-100 transition-opacity"
+            >
+              {copied ? (
+                <>
+                  <Check className="h-3.5 w-3.5 mr-1.5 text-green-500" />
+                  <span className="text-xs">{t('buttons.copied')}</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="h-3.5 w-3.5 mr-1.5" />
+                  <span className="text-xs">{t('buttons.copy')}</span>
+                </>
+              )}
+            </Button>
+          </div>
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent>
@@ -113,6 +159,17 @@ export function SlideCard({
           </div>
         </div>
       </CollapsibleContent>
+
+      {/* Optimization diff dialog */}
+      {result && (
+        <OptimizationDiff
+          result={result}
+          open={showOptimizationDiff}
+          onOpenChange={setShowOptimizationDiff}
+          onAccept={handleAcceptOptimization}
+          onReject={handleRejectOptimization}
+        />
+      )}
     </Collapsible>
   );
 }

@@ -157,7 +157,7 @@ describe('export', () => {
 
       exportJSON(session);
 
-      expect(mockLink.download).toBe('session.json');
+      expect(mockLink.download).toBe('document.json');
     });
   });
 

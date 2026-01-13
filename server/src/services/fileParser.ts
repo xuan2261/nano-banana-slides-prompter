@@ -2,7 +2,7 @@
  * File Parser Service
  * Handles PDF and DOCX file parsing for content extraction
  */
-import pdf from 'pdf-parse';
+import { PDFParse } from 'pdf-parse';
 import mammoth from 'mammoth';
 
 export interface ParseResult {
@@ -20,8 +20,13 @@ export interface ParseResult {
  */
 export async function parsePdf(buffer: Buffer): Promise<ParseResult> {
   try {
-    const data = await pdf(buffer);
-    const text = data.text.trim();
+    const parser = new PDFParse({ data: new Uint8Array(buffer) });
+    const result = await parser.getText();
+    const text = result.text.trim();
+
+    // Get info for page count
+    const info = await parser.getInfo();
+    await parser.destroy();
 
     if (!text) {
       return {
@@ -35,7 +40,7 @@ export async function parsePdf(buffer: Buffer): Promise<ParseResult> {
       success: true,
       text,
       metadata: {
-        pages: data.numpages,
+        pages: info.total,
         wordCount: text.split(/\s+/).length,
       },
     };

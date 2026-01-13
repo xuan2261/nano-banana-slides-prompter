@@ -172,18 +172,20 @@ Output files are generated in `desktop/release/`.
 | ----------------------------- | -------- | ------------------------ |
 | `/api/generate-prompt-stream` | POST     | Generate prompts (SSE)   |
 | `/api/extract-url`            | POST     | Extract content from URL |
+| `/api/optimize-prompt`        | POST     | Optimize prompt via LLM  |
 | `/api/sessions`               | GET/POST | Session management       |
 | `/api/settings/llm`           | GET      | LLM configuration        |
 | `/health`                     | GET      | Health check             |
 
 ## Version
 
-**v1.2.4** - Remove redundant PromptPreview, add export dropdown
+**v1.2.5** - Phase 2: Core Integrations (Prompt Optimizer, PDF Preview, Design Tools Export)
 
 ### Changelog
 
 | Version | Highlights                                                                                |
 | ------- | ----------------------------------------------------------------------------------------- |
+| 1.2.5   | Prompt Optimizer (self-refine), PDF Preview modal, Canva/Figma JSON export                |
 | 1.2.4   | Remove redundant PromptPreview component, add export dropdown (MD, TXT, JSON)             |
 | 1.2.3   | Fix auto-release workflow for fork compatibility                                          |
 | 1.2.2   | Settings hot-reload using Zustand store                                                   |
