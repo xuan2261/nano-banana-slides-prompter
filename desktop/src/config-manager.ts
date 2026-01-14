@@ -9,8 +9,16 @@ export interface LLMConfig {
   model: string;
 }
 
+export interface GeminiConfig {
+  apiKey: string;
+  model: string;
+  enabled: boolean;
+  baseURL?: string;
+}
+
 export interface AppConfig {
   llm: LLMConfig;
+  gemini: GeminiConfig;
   firstRunComplete: boolean;
   checkUpdatesOnStartup: boolean;
   theme: 'system' | 'light' | 'dark';
@@ -21,6 +29,12 @@ const defaultConfig: AppConfig = {
     apiBase: 'https://api.openai.com/v1',
     apiKey: '',
     model: 'gpt-4o',
+  },
+  gemini: {
+    apiKey: '',
+    model: 'gemini-2.0-flash-preview-image-generation',
+    enabled: false,
+    baseURL: undefined,
   },
   firstRunComplete: false,
   checkUpdatesOnStartup: true,
@@ -42,7 +56,12 @@ class ConfigManager {
         const data = fs.readFileSync(this.configPath, 'utf-8');
         const parsed = JSON.parse(data);
         // Merge with defaults to handle new config fields
-        return { ...defaultConfig, ...parsed, llm: { ...defaultConfig.llm, ...parsed.llm } };
+        return {
+          ...defaultConfig,
+          ...parsed,
+          llm: { ...defaultConfig.llm, ...parsed.llm },
+          gemini: { ...defaultConfig.gemini, ...parsed.gemini },
+        };
       }
     } catch (err) {
       log.error('Failed to load config:', err);
@@ -93,6 +112,11 @@ class ConfigManager {
     this.save();
   }
 
+  setGemini(geminiConfig: Partial<GeminiConfig>): void {
+    this.config.gemini = { ...this.config.gemini, ...geminiConfig };
+    this.save();
+  }
+
   isFirstRun(): boolean {
     return !this.config.firstRunComplete;
   }
@@ -127,19 +151,37 @@ export function setupConfigIPC(): void {
     return manager.get();
   });
 
-  ipcMain.handle('set-config', (_event: Electron.IpcMainInvokeEvent, config: Partial<AppConfig>) => {
-    manager.set(config);
-    return true;
-  });
+  ipcMain.handle(
+    'set-config',
+    (_event: Electron.IpcMainInvokeEvent, config: Partial<AppConfig>) => {
+      manager.set(config);
+      return true;
+    }
+  );
 
   ipcMain.handle('get-llm-config', () => {
     return manager.get().llm;
   });
 
-  ipcMain.handle('set-llm-config', (_event: Electron.IpcMainInvokeEvent, llmConfig: Partial<LLMConfig>) => {
-    manager.setLLM(llmConfig);
-    return true;
+  ipcMain.handle(
+    'set-llm-config',
+    (_event: Electron.IpcMainInvokeEvent, llmConfig: Partial<LLMConfig>) => {
+      manager.setLLM(llmConfig);
+      return true;
+    }
+  );
+
+  ipcMain.handle('get-gemini-config', () => {
+    return manager.get().gemini;
   });
+
+  ipcMain.handle(
+    'set-gemini-config',
+    (_event: Electron.IpcMainInvokeEvent, geminiConfig: Partial<GeminiConfig>) => {
+      manager.setGemini(geminiConfig);
+      return true;
+    }
+  );
 
   ipcMain.handle('is-first-run', () => {
     return manager.isFirstRun();

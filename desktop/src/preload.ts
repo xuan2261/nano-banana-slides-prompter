@@ -9,8 +9,16 @@ interface LLMConfig {
   model: string;
 }
 
+interface GeminiConfig {
+  apiKey: string;
+  model: string;
+  enabled: boolean;
+  baseURL?: string;
+}
+
 interface AppConfig {
   llm: LLMConfig;
+  gemini: GeminiConfig;
   firstRunComplete: boolean;
   checkUpdatesOnStartup: boolean;
   theme: 'system' | 'light' | 'dark';
@@ -120,6 +128,20 @@ const electronAPI = {
    */
   setLLMConfig: (config: Partial<LLMConfig>): Promise<boolean> => {
     return ipcRenderer.invoke('set-llm-config', config);
+  },
+
+  /**
+   * Get Gemini configuration
+   */
+  getGeminiConfig: (): Promise<GeminiConfig> => {
+    return ipcRenderer.invoke('get-gemini-config');
+  },
+
+  /**
+   * Set Gemini configuration
+   */
+  setGeminiConfig: (config: Partial<GeminiConfig>): Promise<boolean> => {
+    return ipcRenderer.invoke('set-gemini-config', config);
   },
 
   /**

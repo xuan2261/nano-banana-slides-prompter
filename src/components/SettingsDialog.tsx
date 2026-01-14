@@ -75,9 +75,9 @@ export function SettingsDialog() {
     async function loadFromElectron() {
       if (!window.electronAPI) return;
       try {
+        // Load LLM config
         const config = await window.electronAPI.getLLMConfig();
         if (config?.apiKey || config?.apiBase || config?.model) {
-          // Sync Electron config to Zustand store if not already set
           const current = useSettingsStore.getState().settings;
           if (!current?.apiKey && !current?.baseURL && !current?.model) {
             setSettings({
@@ -87,12 +87,25 @@ export function SettingsDialog() {
             });
           }
         }
+        // Load Gemini config
+        const geminiConfig = await window.electronAPI.getGeminiConfig();
+        if (geminiConfig?.apiKey || geminiConfig?.model || geminiConfig?.enabled) {
+          const currentGemini = useSettingsStore.getState().geminiSettings;
+          if (!currentGemini?.apiKey && !currentGemini?.model) {
+            setGeminiSettings({
+              apiKey: geminiConfig.apiKey || '',
+              model: geminiConfig.model || '',
+              enabled: geminiConfig.enabled ?? false,
+              baseURL: geminiConfig.baseURL || undefined,
+            });
+          }
+        }
       } catch (e) {
         console.warn('Failed to load settings from Electron:', e);
       }
     }
     loadFromElectron();
-  }, [setSettings]);
+  }, [setSettings, setGeminiSettings]);
 
   // Load default settings when dialog opens
   useEffect(() => {
@@ -189,6 +202,13 @@ export function SettingsDialog() {
           apiKey: apiKey.trim(),
           apiBase: baseURL.trim(),
           model: model.trim(),
+        });
+        // Also persist Gemini settings
+        await window.electronAPI.setGeminiConfig({
+          apiKey: geminiApiKey.trim(),
+          model: geminiModel.trim() || geminiDefaultConfig?.model || '',
+          enabled: geminiEnabled,
+          baseURL: geminiBaseURL.trim() || undefined,
         });
       } catch (e) {
         console.warn('Failed to persist settings to Electron:', e);

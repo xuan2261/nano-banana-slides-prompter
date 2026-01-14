@@ -3,7 +3,8 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { BackendManager } from './backend-manager';
 import { setupConfigIPC, getConfigManager } from './config-manager';
-import { setupAutoUpdater, setupUpdateIPC, checkForUpdates } from './auto-updater';
+// Auto-updater disabled - will be re-enabled after proper release workflow is established
+// import { setupAutoUpdater, setupUpdateIPC, checkForUpdates } from './auto-updater';
 import { createAppMenu } from './menu';
 import log from 'electron-log';
 
@@ -45,20 +46,13 @@ async function createWindow(): Promise<void> {
   // Create application menu
   createAppMenu(mainWindow);
 
-  // Setup auto-updater (after window is created)
-  setupAutoUpdater(mainWindow);
+  // Auto-updater disabled - will be re-enabled after proper release workflow is established
+  // setupAutoUpdater(mainWindow);
 
   // Show window when ready
   mainWindow.once('ready-to-show', () => {
     mainWindow?.show();
-
-    // Check for updates after window is shown (production only)
-    const config = getConfigManager();
-    if (!isDev && config.get().checkUpdatesOnStartup) {
-      setTimeout(() => {
-        checkForUpdates();
-      }, 3000); // Delay to let app settle
-    }
+    // Auto-updater disabled - checkForUpdates() removed
   });
 
   // Start backend and get port
@@ -178,8 +172,8 @@ function setupIPC(): void {
   // Setup config IPC
   setupConfigIPC();
 
-  // Setup update IPC
-  setupUpdateIPC();
+  // Auto-updater IPC disabled
+  // setupUpdateIPC();
 
   log.info('IPC handlers registered');
 }

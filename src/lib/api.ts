@@ -12,8 +12,16 @@ interface ElectronLLMConfig {
   model: string;
 }
 
+interface ElectronGeminiConfig {
+  apiKey: string;
+  model: string;
+  enabled: boolean;
+  baseURL?: string;
+}
+
 interface ElectronAppConfig {
   llm: ElectronLLMConfig;
+  gemini: ElectronGeminiConfig;
   firstRunComplete: boolean;
   checkUpdatesOnStartup: boolean;
   theme: 'system' | 'light' | 'dark';
@@ -53,6 +61,8 @@ declare global {
       setConfig: (config: Partial<ElectronAppConfig>) => Promise<boolean>;
       getLLMConfig: () => Promise<ElectronLLMConfig>;
       setLLMConfig: (config: Partial<ElectronLLMConfig>) => Promise<boolean>;
+      getGeminiConfig: () => Promise<ElectronGeminiConfig>;
+      setGeminiConfig: (config: Partial<ElectronGeminiConfig>) => Promise<boolean>;
       isFirstRun: () => Promise<boolean>;
       markFirstRunComplete: () => Promise<boolean>;
       getConfigPath: () => Promise<string>;
