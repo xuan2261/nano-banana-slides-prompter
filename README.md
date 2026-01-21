@@ -182,23 +182,30 @@ Output files are generated in `desktop/release/`.
 | `/api/optimize-prompt`        | POST     | Optimize prompt via LLM  |
 | `/api/sessions`               | GET/POST | Session management       |
 | `/api/settings/llm`           | GET      | LLM configuration        |
+| `/api/gemini/generate-image`  | POST     | Single image generation  |
+| `/api/gemini/generate-images` | POST     | Batch image generation   |
+| `/api/gemini/test-connection` | POST     | Test Gemini API          |
+| `/api/regenerate-slide`       | POST     | Regenerate single slide  |
 | `/health`                     | GET      | Health check             |
 
 ## Version
 
-**v2.0.11** - Fix image generation button state not resetting
+**v2.0.16** - Per-slide image generation with batch selection
 
 ### Changelog
 
 | Version | Highlights                                                                      |
 | ------- | ------------------------------------------------------------------------------- |
+| 2.0.16  | Per-slide image generation, batch selection, thumbnail preview, AbortController |
+| 2.0.15  | Generate Image button per slide, regenerate when image exists                   |
+| 2.0.14  | Fix Gemini model selection in test connection                                   |
+| 2.0.13  | Slide regeneration, drag-drop reordering, auto-save, error boundary             |
+| 2.0.12  | Visual Style toggle (auto/custom), slide count limit 200                        |
 | 2.0.11  | Fix image generation button state not resetting after new prompt generation     |
 | 2.0.10  | Fix Bun double server startup bug (remove export default)                       |
 | 2.0.9   | Gemini config persistence, disable auto-updater temporarily                     |
 | 2.0.8   | Dynamic port resolution with Electron storage                                   |
-| 2.0.7   | Update URLs to fork, add v2.0.5-2.0.6 changelog                                 |
 | 2.0.6   | Fix backend port conflict with retry logic, update auto-updater config          |
-| 2.0.5   | DOMMatrix polyfill for pdfjs-dist compatibility                                 |
 | 2.0.4   | Inline edit for slide prompts before image generation                           |
 | 2.0.3   | Custom API base URL for Gemini Image Generation                                 |
 | 2.0.0   | Quiz Templates (4 types), Brand Kit, Course Builder (Beta), Gemini integration  |

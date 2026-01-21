@@ -1,6 +1,6 @@
 # Development Roadmap
 
-**Version:** 2.0.12 | **Last Updated:** 2026-01-21
+**Version:** 2.0.16 | **Last Updated:** 2026-01-21
 
 ## Overview
 
@@ -15,7 +15,7 @@ This document tracks the development phases, milestones, and progress of Nano Ba
 | 3     | Document Processing & Export   | Complete    | 100%     |
 | 4     | Education & Business Focus     | Complete    | 100%     |
 | 5     | Gemini & UX Improvements       | Complete    | 100%     |
-| 6     | Advanced Features              | In Progress | 30%      |
+| 6     | Advanced Features              | In Progress | 60%      |
 
 ---
 
@@ -118,10 +118,15 @@ This document tracks the development phases, milestones, and progress of Nano Ba
 - [x] Drag-and-Drop Reordering - reorder slides with dnd-kit
 - [x] Auto-Save - periodic localStorage backup (30s interval)
 - [x] Error Boundary - graceful error handling with fallback UI
+- [x] Per-Slide Image Generation - Generate Image button per slide (v2.0.15)
+- [x] Batch Image Selection - select multiple slides with checkboxes (v2.0.16)
+- [x] Thumbnail Preview - 32px image preview in SlideCard header (v2.0.16)
+- [x] Image Regeneration - regenerate button when image exists (v2.0.15)
+- [x] AbortController - fetch cleanup to prevent race conditions (v2.0.16)
 
 ### Planned Features
 
-- [ ] Image preview and gallery view
+- [ ] Image gallery view for all generated images
 - [ ] Export generated images to presentation
 - [ ] Team collaboration features
 - [ ] Analytics dashboard
@@ -147,6 +152,10 @@ This document tracks the development phases, milestones, and progress of Nano Ba
 
 | Version | Date       | Phase | Key Changes                                       |
 | ------- | ---------- | ----- | ------------------------------------------------- |
+| 2.0.16  | 2026-01-21 | 6     | Per-slide image gen, batch selection, thumbnails  |
+| 2.0.15  | 2026-01-21 | 6     | Generate Image button per slide, regenerate       |
+| 2.0.14  | 2026-01-21 | 6     | Fix Gemini model selection in test connection     |
+| 2.0.13  | 2026-01-21 | 6     | Slide regeneration, drag-drop, auto-save          |
 | 2.0.12  | 2026-01-21 | 5     | Visual Style toggle, slide count limit 200        |
 | 2.0.10  | 2026-01-14 | 5     | Fix Bun double server startup bug                 |
 | 2.0.9   | 2026-01-14 | 5     | Gemini config persistence, disable auto-updater   |

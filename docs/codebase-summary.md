@@ -1,6 +1,6 @@
 # Codebase Summary
 
-**Version:** 2.0.12 | **Last Updated:** 2026-01-21
+**Version:** 2.0.16 | **Last Updated:** 2026-01-21
 
 ## Overview
 
@@ -71,10 +71,11 @@ nano-banana-slides-prompter/
 | `StyleSelector.tsx`        | Visual style selection (20 styles) with auto/custom mode toggle |
 | `CharacterSelector.tsx`    | Character presenter options                                     |
 | `PresentationSettings.tsx` | Aspect ratio, slide count (1-200), palette                      |
-| `PromptOutput.tsx`         | Generated prompts display                                       |
-| `SlideCard.tsx`            | Individual slide prompt card                                    |
-| `SlideListDndContext.tsx`  | Drag-and-drop context provider (dnd-kit)                        |
+| `PromptOutput.tsx`         | Generated prompts display with image generation buttons         |
+| `SlideCard.tsx`            | Individual slide prompt card with Generate Image button         |
 | `SortableSlideCard.tsx`    | Draggable slide card wrapper                                    |
+| `SlideListDndContext.tsx`  | Drag-and-drop context provider (dnd-kit)                        |
+| `GeminiImagePreview.tsx`   | Image preview modal for generated images                        |
 
 ### Error Handling (`src/components/error/`)
 
@@ -124,14 +125,15 @@ nano-banana-slides-prompter/
 
 ### Custom Hooks
 
-| Hook                        | Purpose                                  |
-| --------------------------- | ---------------------------------------- |
-| `useStreamingGeneration.ts` | SSE streaming for prompt generation      |
-| `usePromptOptimizer.ts`     | Prompt optimization via LLM              |
-| `useSlideRegeneration.ts`   | Single slide regeneration with context   |
-| `useAutoSave.ts`            | Auto-save to localStorage (30s interval) |
-| `use-toast.ts`              | Toast notification management            |
-| `use-mobile.tsx`            | Mobile device detection                  |
+| Hook                        | Purpose                                           |
+| --------------------------- | ------------------------------------------------- |
+| `useStreamingGeneration.ts` | SSE streaming for prompt generation               |
+| `usePromptOptimizer.ts`     | Prompt optimization via LLM                       |
+| `useSlideRegeneration.ts`   | Single slide regeneration with context            |
+| `useAutoSave.ts`            | Auto-save to localStorage (30s interval)          |
+| `useGeminiImage.ts`         | Generate images with Gemini Imagen 4 (batch/single, AbortController) |
+| `use-toast.ts`              | Toast notification management                     |
+| `use-mobile.tsx`            | Mobile device detection                           |
 
 ### Utilities (`src/lib/`)
 
@@ -186,14 +188,16 @@ nano-banana-slides-prompter/
 | `settings.ts`   | `GET /api/settings/llm`                                         | LLM configuration         |
 | `optimize.ts`   | `POST /api/optimize-prompt`                                     | Prompt optimization       |
 | `regenerate.ts` | `POST /api/regenerate-slide`                                    | Single slide regeneration |
+| `gemini.ts`     | `POST /api/gemini/generate-image`, `POST /api/gemini/generate-images`, `POST /api/gemini/test-connection`, `GET /api/gemini/config` | Gemini image generation |
 
 ### Services (`server/src/services/`)
 
-| File                 | Purpose                               |
-| -------------------- | ------------------------------------- |
-| `llm.ts`             | OpenAI SDK wrapper, streaming support |
-| `scraper.ts`         | Web scraping with Cheerio             |
-| `promptOptimizer.ts` | Self-refine prompt optimization       |
+| File                    | Purpose                                      |
+| ----------------------- | -------------------------------------------- |
+| `llm.ts`                | OpenAI SDK wrapper, streaming support        |
+| `scraper.ts`            | Web scraping with Cheerio                    |
+| `promptOptimizer.ts`    | Self-refine prompt optimization              |
+| `geminiImageClient.ts`  | Gemini Imagen 4 client with rate limiting    |
 
 ### Prompts (`server/src/prompts/`)
 
@@ -284,14 +288,14 @@ Return Structured Content → Update ContentInput
 | `src/components/`                | 4     | App components          |
 | `src/pages/`                     | 2     | Route pages             |
 | `src/stores/`                    | 4     | State stores            |
-| `src/hooks/`                     | 5     | Custom hooks            |
+| `src/hooks/`                     | 6     | Custom hooks            |
 | `src/lib/`                       | 3     | Utilities               |
 | `src/lib/utils/`                 | 1     | Utility functions       |
 | `src/data/templates/categories/` | 5     | Template categories     |
 | `src/types/`                     | 1     | Type definitions        |
 | `src/i18n/`                      | 4     | i18n config + 3 locales |
-| `server/src/routes/`             | 6     | API routes              |
-| `server/src/services/`           | 3     | Services                |
+| `server/src/routes/`             | 7     | API routes              |
+| `server/src/services/`           | 4     | Services                |
 | `server/src/prompts/`            | 4     | Prompt logic            |
 | `desktop/src/`                   | 6     | Electron main process   |
 | `desktop/scripts/`               | 1     | Build scripts           |

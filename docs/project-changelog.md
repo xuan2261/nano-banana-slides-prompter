@@ -4,6 +4,37 @@ All notable changes to Nano Banana Slides Prompter are documented here.
 
 ---
 
+## [2.0.16] - 2026-01-21
+
+### Added
+
+- Per-slide image generation with Generate Image button on each SlideCard
+- Batch image selection with checkboxes and "Generate Selected" button
+- 32px thumbnail preview in SlideCard header when image exists
+- AbortController for fetch cleanup to prevent race conditions
+- Silent ignore AbortError during component unmount
+
+### Changed
+
+- PromptOutput now supports batch selection mode for image generation
+- SlideCard displays image thumbnail when generated
+
+---
+
+## [2.0.15] - 2026-01-21
+
+### Added
+
+- Generate Image button on individual slides
+- Regenerate button when slide already has an image
+- useGeminiImage hook for single/batch image generation
+
+### Changed
+
+- Improved image generation UX with loading states
+
+---
+
 ## [2.0.14] - 2026-01-21
 
 ### Fixed

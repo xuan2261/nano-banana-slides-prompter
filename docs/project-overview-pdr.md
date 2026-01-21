@@ -7,7 +7,7 @@
 | Attribute    | Value                       |
 | ------------ | --------------------------- |
 | Name         | Nano Banana Slides Prompter |
-| Version      | 2.0.12                      |
+| Version      | 2.0.16                      |
 | License      | GPL-3.0-or-later            |
 | Repository   | nano-banana-slides-prompter |
 | Last Updated | 2026-01-21                  |
@@ -99,9 +99,13 @@
 ### 13. Gemini Image Generation (v2.0.0+)
 
 - **Imagen 4 Model**: Text-to-image generation via Google Gemini API
-- **Batch Generation**: Generate images for multiple slides
+- **Per-Slide Generation**: Generate image for individual slides (v2.0.15+)
+- **Batch Generation**: Select multiple slides with checkboxes, generate all at once
+- **Thumbnail Preview**: 32px image preview in SlideCard header
+- **Regenerate Support**: Regenerate button when image already exists
 - **Custom API Base URL**: Configurable Gemini endpoint (v2.0.3)
 - **Test Connection**: Verify Gemini API connectivity
+- **AbortController**: Fetch cleanup to prevent race conditions (v2.0.16)
 
 ### 14. Inline Prompt Editing (v2.0.4)
 
@@ -162,6 +166,8 @@
 | FR-24 | Drag-and-drop slide reordering           | Medium   | Done   |
 | FR-25 | Auto-save to localStorage                | Low      | Done   |
 | FR-26 | Error boundary with fallback UI          | High     | Done   |
+| FR-27 | Per-slide image generation               | Medium   | Done   |
+| FR-28 | Batch image selection and generation     | Medium   | Done   |
 
 ### Non-Functional Requirements
 
@@ -210,6 +216,10 @@
 
 | Version | Date    | Highlights                                                  |
 | ------- | ------- | ----------------------------------------------------------- |
+| 2.0.16  | 2026-01 | Per-slide image gen, batch selection, thumbnail preview     |
+| 2.0.15  | 2026-01 | Generate Image button per slide, regenerate support         |
+| 2.0.14  | 2026-01 | Fix Gemini model selection in test connection               |
+| 2.0.13  | 2026-01 | Slide regeneration, drag-drop, auto-save, error boundary    |
 | 2.0.12  | 2026-01 | Visual Style toggle (auto/custom), slide count limit 200    |
 | 2.0.10  | 2026-01 | Fix Bun double server startup bug                           |
 | 2.0.9   | 2026-01 | Gemini config persistence, disable auto-updater temporarily |

@@ -1,6 +1,6 @@
 # System Architecture
 
-**Version:** 2.0.12 | **Last Updated:** 2026-01-21
+**Version:** 2.0.16 | **Last Updated:** 2026-01-21
 
 ## High-Level Overview
 
@@ -161,11 +161,11 @@ flowchart TD
 | `/api/sessions/current/:id`   | PUT    | Set current session | -                                | `{ success }`                    |
 | `/api/sessions/sync`          | POST   | Bulk sync           | `{ sessions, currentSessionId }` | `{ success }`                    |
 | `/api/settings/llm`           | GET    | Get LLM config      | -                                | `{ baseUrl, model }`             |
-| `/api/generate-image`         | POST   | Generate image      | `{ prompt, config }`             | `{ imageUrl, base64 }`           |
-| `/api/generate-images-batch`  | POST   | Batch image gen     | `{ prompts[], config }`          | `{ images[] }`                   |
-| `/api/gemini/test`            | POST   | Test Gemini conn    | `{ apiKey, apiBase }`            | `{ success, model }`             |
-| `/api/gemini/config`          | GET    | Get Gemini config   | -                                | `{ apiBase, model }`             |
-| `/api/upload/pdf`             | POST   | Upload PDF          | `multipart/form-data`            | `{ content, pages }`             |
+| `/api/gemini/generate-image`  | POST   | Generate image  | `{ prompt, config }`             | `{ imageUrl, base64 }`           |
+| `/api/gemini/generate-images` | POST   | Batch image gen | `{ prompts[], config }`          | `{ images[] }`                   |
+| `/api/gemini/test-connection` | POST   | Test Gemini     | `{ apiKey, apiBase, model }`     | `{ success, model }`             |
+| `/api/gemini/config`          | GET    | Get Gemini cfg  | -                                | `{ apiBase, model }`             |
+| `/api/upload/pdf`             | POST   | Upload PDF      | `multipart/form-data`            | `{ content, pages }`             |
 | `/api/upload/docx`            | POST   | Upload DOCX         | `multipart/form-data`            | `{ content }`                    |
 
 ### Service Layer
