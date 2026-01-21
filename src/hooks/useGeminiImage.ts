@@ -177,6 +177,15 @@ export function useGeminiImage(): UseGeminiImageReturn {
           throw new Error(data.error || 'Generation failed');
         }
       } catch (error) {
+        // Silently ignore AbortError - user initiated cancellation
+        if (error instanceof Error && error.name === 'AbortError') {
+          setState((prev) => ({
+            ...prev,
+            isGenerating: false,
+          }));
+          return;
+        }
+
         const message = error instanceof Error ? error.message : 'Unknown error';
         setState((prev) => ({
           ...prev,
@@ -262,6 +271,15 @@ export function useGeminiImage(): UseGeminiImageReturn {
 
         throw new Error(data.error || 'Generation failed');
       } catch (error) {
+        // Silently ignore AbortError - user initiated cancellation
+        if (error instanceof Error && error.name === 'AbortError') {
+          setState((prev) => ({
+            ...prev,
+            isGenerating: false,
+          }));
+          return null;
+        }
+
         const message = error instanceof Error ? error.message : 'Unknown error';
         setState((prev) => ({
           ...prev,
